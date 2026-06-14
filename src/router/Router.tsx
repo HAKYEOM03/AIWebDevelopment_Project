@@ -12,7 +12,7 @@ import ManagePage from "../pages/ManagePage";
 
 export default function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/AIWebDevelopment_Project">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/intro" element={<IntroPage />} />
