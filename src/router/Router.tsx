@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import IntroPage from "../pages/IntroPage";
 import QuizSelectPage from "../pages/QuizSelectPage";
@@ -12,7 +12,7 @@ import ManagePage from "../pages/ManagePage";
 
 export default function Router() {
   return (
-    <BrowserRouter basename="/AIWebDevelopment_Project">
+    <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/intro" element={<IntroPage />} />
@@ -25,6 +25,6 @@ export default function Router() {
         <Route path="/wrong-answers" element={<WrongAnswerPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

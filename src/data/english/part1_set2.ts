@@ -13,7 +13,7 @@ const questions: Question[] = [
       "The woman is sitting on a stool."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set2/S2Q1.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q1.png"
   },
   {
     id: 12,
@@ -27,7 +27,7 @@ const questions: Question[] = [
       "A woman is filling a cup with milk."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set2/S2Q2.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q2.png"
   },
   {
     id: 13,
@@ -41,7 +41,7 @@ const questions: Question[] = [
       "A flower vase has been placed on the floor."
     ],
     answer: "A",
-    imageUrl: "/images/part1_set2/S2Q3.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q3.png"
   },
   {
     id: 14,
@@ -55,7 +55,7 @@ const questions: Question[] = [
       "There is a candle under the table."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set2/S2Q4.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q4.png"
   },
   {
     id: 15,
@@ -69,7 +69,7 @@ const questions: Question[] = [
       "The women are pointing to the trunk."
     ],
     answer: "A",
-    imageUrl: "/images/part1_set2/S2Q5.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q5.png"
   },
   {
     id: 16,
@@ -83,7 +83,7 @@ const questions: Question[] = [
       "Some people are pushing carts."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set2/S2Q6.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q6.png"
   },
   {
     id: 17,
@@ -97,7 +97,7 @@ const questions: Question[] = [
       "Railings border a body of water."
     ],
     answer: "D",
-    imageUrl: "/images/part1_set2/S2Q7.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q7.png"
   },
   {
     id: 18,
@@ -111,7 +111,7 @@ const questions: Question[] = [
       "A woman is writing something with a marker."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set2/S2Q8.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q8.png"
   },
   {
     id: 19,
@@ -125,7 +125,7 @@ const questions: Question[] = [
       "Water is splashing onto a boat deck."
     ],
     answer: "A", 
-    imageUrl: "/images/part1_set2/S2Q9.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q9.png"
   },
   {
     id: 20,
@@ -139,7 +139,7 @@ const questions: Question[] = [
       "Glass doors lead out to a garden."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set2/S2Q10.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set2/S2Q10.png"
   }
 ];
 

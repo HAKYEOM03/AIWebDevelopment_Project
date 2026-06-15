@@ -13,7 +13,7 @@ const questions: Question[] = [
       "She is fixing a telephone."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set3/S3Q1.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q1.png"
   },
   {
     id: 22,
@@ -27,7 +27,7 @@ const questions: Question[] = [
       "He is carrying a bag."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set3/S3Q2.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q2.png"
   },
   {
     id: 23,
@@ -41,7 +41,7 @@ const questions: Question[] = [
       "They are washing their hands."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set3/S3Q3.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q3.png"
   },
   {
     id: 24,
@@ -55,7 +55,7 @@ const questions: Question[] = [
       "People are walking in a line."
     ],
     answer: "A",
-    imageUrl: "/images/part1_set3/S3Q4.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q4.png"
   },
   {
     id: 25,
@@ -69,7 +69,7 @@ const questions: Question[] = [
       "The cupboard has been opened."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set3/S3Q5.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q5.png"
   },
   {
     id: 26,
@@ -83,7 +83,7 @@ const questions: Question[] = [
       "The street is full of people."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set3/S3Q6.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q6.png"
   },
   {
     id: 27,
@@ -97,7 +97,7 @@ const questions: Question[] = [
       "They are setting a table."
     ],
     answer: "C",
-    imageUrl: "/images/part1_set3/S3Q7.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q7.png"
   },
   {
     id: 28,
@@ -111,7 +111,7 @@ const questions: Question[] = [
       "Some taxis have stopped in a row to collect passengers."
     ],
     answer: "A",
-    imageUrl: "/images/part1_set3/S3Q8.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q8.png"
   },
   {
     id: 29,
@@ -125,7 +125,7 @@ const questions: Question[] = [
       "The woman is giving the man a safety helmet."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set3/S3Q9.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q9.png"
   },
   {
     id: 30,
@@ -139,7 +139,7 @@ const questions: Question[] = [
       "Horses are pulling a carriage."
     ],
     answer: "B",
-    imageUrl: "/images/part1_set3/S3Q10.png"
+    imageUrl: "/AIWebDevelopment_Project/images/part1_set3/S3Q10.png"
   }
 ];
 
