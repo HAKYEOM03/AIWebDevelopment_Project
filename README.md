@@ -28,4 +28,4 @@ npm run preview
 1. GitHub에 저장소 생성 (예: `graduation-exam-platform`)
 2. 아래 명령으로 push
 3. GitHub → Settings → Pages → Source: **GitHub Actions** 선택
-4. 배포 URL: `https://<GitHub아이디>.github.io/graduation-exam-platform/`
+4. 배포 URL: `https://HAKYEOM03.github.io/graduation-exam-platform/`
