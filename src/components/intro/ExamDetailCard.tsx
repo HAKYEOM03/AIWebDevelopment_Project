@@ -5,7 +5,6 @@ import { getColorSet } from "../../utils/colorMap";
 import { ExamDataContext } from "../../context/ExamDataContext";
 import CountdownTimer from "../home/CountdownTimer";
 import RegistrationStatus from "./RegistrationStatus";
-import PassRateBar from "../exam-detail/PassRateBar";
 import NoticeSection from "../exam-detail/NoticeSection";
 
 /** 개별 탭 선택 시 상세 카드 (합격률 + 공지사항, 입력은 관리 페이지에서) */
@@ -13,12 +12,10 @@ export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
   const navigate = useNavigate();
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { stats, examDates } = examData;
+  const { examDates } = examData;
   const c = getColorSet(exam.color);
   // 관리 페이지에서 설정한 날짜가 있으면 우선 사용
   const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
-
-  const current = stats[exam.id] ?? { applicants: 0, passed: 0 };
 
   return (
     <div className="bg-white rounded-3xl shadow-sm overflow-hidden max-w-3xl mx-auto w-full">
@@ -79,13 +76,6 @@ export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
             ))}
           </div>
         </div>
-
-        {/* 합격률 (관리 페이지에서 입력한 값이 자동 반영됨) */}
-        <PassRateBar
-          applicants={current.applicants}
-          passed={current.passed}
-          color={exam.color}
-        />
 
         {/* 공지사항 (exam-detail 컴포넌트 재사용) */}
         <NoticeSection examId={exam.id} />

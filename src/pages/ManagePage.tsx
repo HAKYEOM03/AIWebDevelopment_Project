@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import ExamDateEditor from "../components/manage/ExamDateEditor";
 import NoticeManager from "../components/manage/NoticeManager";
-import StatsManager from "../components/manage/StatsManager";
 
 export default function ManagePage() {
   const navigate = useNavigate();
@@ -24,9 +23,6 @@ export default function ManagePage() {
             <ExamDateEditor />
             <NoticeManager />
           </div>
-
-          {/* 하단: 합격률(통계) 입력 — 가로 전체 폭 */}
-          <StatsManager />
         </div>
 
         <div className="mt-8 text-center">

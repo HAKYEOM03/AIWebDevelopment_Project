@@ -5,7 +5,6 @@ import { examInfoList } from "../data/examInfo";
 import { getColorSet } from "../utils/colorMap";
 import ExamBasicInfo from "../components/exam-detail/ExamBasicInfo";
 import InfoSectionCard from "../components/exam-detail/InfoSectionCard";
-import PassRateBar from "../components/exam-detail/PassRateBar";
 import NoticeSection from "../components/exam-detail/NoticeSection";
 import CountdownTimer from "../components/home/CountdownTimer";
 import { ExamDataContext } from "../context/ExamDataContext";
@@ -15,7 +14,7 @@ export default function ExamDetailPage() {
   const navigate = useNavigate();
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { stats, examDates } = examData;
+  const { examDates } = examData;
 
   const exam = examInfoList.find((e) => e.id === examId);
 
@@ -33,7 +32,6 @@ export default function ExamDetailPage() {
   }
 
   const c = getColorSet(exam.color);
-  const examStats = stats[exam.id] ?? { applicants: 0, passed: 0 };
   // 관리 페이지에서 설정한 날짜가 있으면 우선 사용
   const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
   const now = new Date();
@@ -68,13 +66,6 @@ export default function ExamDetailPage() {
 
         {/* 기본 정보 */}
         <ExamBasicInfo exam={exam} isOpen={isOpen} isExpired={isExpired} />
-
-        {/* 합격률 (관리 페이지에서 입력한 값이 자동 반영됨) */}
-        <PassRateBar
-          applicants={examStats.applicants}
-          passed={examStats.passed}
-          color={exam.color}
-        />
 
         {/* 상세 안내 섹션 */}
         <div className="space-y-4">

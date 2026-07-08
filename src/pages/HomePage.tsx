@@ -3,7 +3,6 @@ import Navbar from "../components/layout/Navbar";
 import DDayPanel from "../components/home/DDayPanel";
 import Carousel from "../components/home/Carousel";
 import NoticeBoard from "../components/home/NoticeBoard";
-import PassRateSection from "../components/home/PassRateSection";
 import { slides } from "../data/homeSlides";
 import { examInfoList, notices as staticNotices } from "../data/examInfo";
 import { ExamDataContext } from "../context/ExamDataContext";
@@ -35,7 +34,7 @@ export default function HomePage() {
 
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { notices: dynamicNotices, stats, examDates } = examData;
+  const { notices: dynamicNotices, examDates } = examData;
 
   const allNotices = [
     ...staticNotices.map((n) => ({ ...n, examId: "general" as const })),
@@ -52,7 +51,6 @@ export default function HomePage() {
         <NoticeBoard notices={allNotices} />
         <DDayPanel exams={examInfoList} examDates={examDates} />
       </div>
-      <PassRateSection exams={examInfoList} stats={stats} />
     </div>
   );
 }
