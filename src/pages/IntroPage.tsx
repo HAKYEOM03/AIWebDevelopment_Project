@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Navbar from "../components/layout/Navbar";
-import { examInfoList } from "../data/examInfo";
 import ExamInfoCard from "../components/intro/ExamInfoCard";
 import ExamDetailCard from "../components/intro/ExamDetailCard";
+import { useEffectiveExamList } from "../hooks/useEffectiveExamList";
 
 export default function IntroPage() {
   const [selected, setSelected] = useState<string | null>(null);
+  const examInfoList = useEffectiveExamList();
   const selectedExam = examInfoList.find((e) => e.id === selected) ?? null;
 
   return (

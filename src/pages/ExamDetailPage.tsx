@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { examInfoList } from "../data/examInfo";
 import { getColorSet } from "../utils/colorMap";
 import ExamBasicInfo from "../components/exam-detail/ExamBasicInfo";
 import InfoSectionCard from "../components/exam-detail/InfoSectionCard";
 import NoticeSection from "../components/exam-detail/NoticeSection";
 import CountdownTimer from "../components/home/CountdownTimer";
 import { ExamDataContext } from "../context/ExamDataContext";
+import { useEffectiveExamList } from "../hooks/useEffectiveExamList";
 
 export default function ExamDetailPage() {
   const { examId } = useParams<{ examId: string }>();
@@ -15,6 +15,7 @@ export default function ExamDetailPage() {
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
   const { examDates } = examData;
+  const examInfoList = useEffectiveExamList();
 
   const exam = examInfoList.find((e) => e.id === examId);
 
