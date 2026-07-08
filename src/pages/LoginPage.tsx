@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
+import { loginAdmin } from "../utils/auth";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (id && pw) {
-      alert("로그인 기능은 준비 중입니다.");
+    if (loginAdmin(id, pw)) {
+      setError("");
+      navigate("/manage");
+    } else {
+      setError("아이디 또는 비밀번호가 올바르지 않습니다.");
     }
   };
 
@@ -24,18 +29,18 @@ export default function LoginPage() {
             <div className="w-16 h-16 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
               KBU
             </div>
-            <h1 className="text-2xl font-bold text-gray-800">로그인</h1>
+            <h1 className="text-2xl font-bold text-gray-800">관리자 로그인</h1>
             <p className="text-sm text-gray-400 mt-1">한국성서대학교 졸업고사 연습</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">학번</label>
+              <label className="block text-sm font-medium text-gray-600 mb-1">아이디</label>
               <input
                 type="text"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
-                placeholder="학번을 입력하세요"
+                placeholder="관리자 아이디를 입력하세요"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
               />
             </div>
@@ -49,6 +54,7 @@ export default function LoginPage() {
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
               />
             </div>
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <button
               type="submit"
               className="w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors mt-2"
@@ -56,11 +62,6 @@ export default function LoginPage() {
               로그인
             </button>
           </form>
-
-          <div className="mt-6 text-center text-sm text-gray-400">
-            로그인 문제가 있으신가요?{" "}
-            <span className="text-blue-600 cursor-pointer hover:underline">학사팀 문의</span>
-          </div>
 
           <button
             className="mt-4 w-full text-center text-sm text-gray-400 hover:text-gray-600"

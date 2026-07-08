@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { isAdminAuthenticated, logoutAdmin } from "../../utils/auth";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const isAdmin = isAdminAuthenticated();
+
+  const handleLogout = () => {
+    logoutAdmin();
+    navigate("/");
+  };
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -21,24 +28,37 @@ export default function Navbar() {
 
         {/* 데스크탑 메뉴 */}
         <div className="hidden md:flex items-center gap-8">
-          <Link to="/intro" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            소개
-          </Link>
-          <Link to="/quiz" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            문제
-          </Link>
-          <Link to="/applicants" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            신청자 조회
-          </Link>
-          <Link to="/manage" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            관리
-          </Link>
-          <button
-            onClick={() => navigate("/login")}
-            className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-800 transition-colors"
-          >
-            로그인
-          </button>
+          {isAdmin ? (
+            <>
+              <Link to="/applicants" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                신청자 조회
+              </Link>
+              <Link to="/manage" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                관리
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="bg-gray-100 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/intro" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                소개
+              </Link>
+              <Link to="/quiz" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                문제
+              </Link>
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-800 transition-colors"
+              >
+                관리자 로그인
+              </button>
+            </>
+          )}
         </div>
 
         {/* 모바일 햄버거 */}
@@ -59,11 +79,27 @@ export default function Navbar() {
       {/* 모바일 메뉴 */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t px-4 py-3 flex flex-col gap-3">
-          <Link to="/intro" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>소개</Link>
-          <Link to="/quiz" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>문제</Link>
-          <Link to="/applicants" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>신청자 조회</Link>
-          <Link to="/manage" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>관리</Link>
-          <Link to="/login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>로그인</Link>
+          {isAdmin ? (
+            <>
+              <Link to="/applicants" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>신청자 조회</Link>
+              <Link to="/manage" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>관리</Link>
+              <button
+                className="text-left text-gray-700 font-medium py-2"
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleLogout();
+                }}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/intro" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>소개</Link>
+              <Link to="/quiz" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>문제</Link>
+              <Link to="/login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>관리자 로그인</Link>
+            </>
+          )}
         </div>
       )}
     </nav>

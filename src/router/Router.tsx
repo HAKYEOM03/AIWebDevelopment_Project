@@ -9,6 +9,7 @@ import LoginPage from "../pages/LoginPage";
 import ExamDetailPage from "../pages/ExamDetailPage";
 import ApplicantPage from "../pages/ApplicantPage";
 import ManagePage from "../pages/ManagePage";
+import RequireAdmin from "./RequireAdmin";
 
 export default function Router() {
   return (
@@ -18,8 +19,22 @@ export default function Router() {
         <Route path="/intro" element={<IntroPage />} />
         <Route path="/exam/:examId" element={<ExamDetailPage />} />
         <Route path="/quiz" element={<QuizSelectPage />} />
-        <Route path="/applicants" element={<ApplicantPage />} />
-        <Route path="/manage" element={<ManagePage />} />
+        <Route
+          path="/applicants"
+          element={
+            <RequireAdmin>
+              <ApplicantPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/manage"
+          element={
+            <RequireAdmin>
+              <ManagePage />
+            </RequireAdmin>
+          }
+        />
         <Route path="/quiz/:examId/:part/:set" element={<QuizPage />} />
         <Route path="/result" element={<ResultPage />} />
         <Route path="/wrong-answers" element={<WrongAnswerPage />} />
