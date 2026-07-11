@@ -69,7 +69,7 @@ export default function ExamDetailPage() {
         <ExamBasicInfo exam={exam} isOpen={isOpen} isExpired={isExpired} />
 
         {/* 상세 안내 섹션 */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {exam.infoSections.map((section, si) => (
             <InfoSectionCard key={si} section={section} color={exam.color} />
           ))}
@@ -81,7 +81,7 @@ export default function ExamDetailPage() {
         {/* 하단 버튼 */}
         <div className="flex gap-3">
           <button
-            onClick={() => navigate("/quiz")}
+            onClick={() => navigate("/quiz", { state: { examId: exam.id } })}
             className={`flex-1 ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
           >
             문제 풀기 →

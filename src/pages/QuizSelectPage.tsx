@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import ExamSelector from "../components/quiz/ExamSelector";
 import PartSelector from "../components/quiz/PartSelector";
 import { quizExams } from "../data/quizExams";
 
+interface QuizSelectLocationState {
+  examId?: string;
+}
+
 export default function QuizSelectPage() {
-  const [selectedExam, setSelectedExam] = useState<string | null>(null);
+  const location = useLocation();
+  const preselectedExamId = (location.state as QuizSelectLocationState | null)?.examId ?? null;
+  const [selectedExam, setSelectedExam] = useState<string | null>(preselectedExamId);
 
   const exam = quizExams.find((e) => e.id === selectedExam);
 

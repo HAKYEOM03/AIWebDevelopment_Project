@@ -81,7 +81,7 @@ export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
 
         {/* 더 자세히 보기: 상세 안내 섹션 (졸업고사 상세 페이지와 동일한 내용) */}
         {showMore && (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {exam.infoSections.map((section, si) => (
               <InfoSectionCard key={si} section={section} color={exam.color} />
             ))}
@@ -98,9 +98,9 @@ export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
         {/* 공지사항 (exam-detail 컴포넌트 재사용) */}
         <NoticeSection examId={exam.id} />
 
-        {/* 문제 풀기 버튼 */}
+        {/* 문제 풀기 버튼 (해당 졸업고사로 바로 진입) */}
         <button
-          onClick={() => navigate("/quiz")}
+          onClick={() => navigate("/quiz", { state: { examId: exam.id } })}
           className={`w-full ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
         >
           문제 풀기 →
