@@ -1,0 +1,30 @@
+import { Question } from "./types";
+
+const wilsonLetter =
+  "Ms Pamela Wilson\n781 Belvedere Road\nRockwall, AZ 21902\n\nDear Ms Wilson,\n\nThank you very much for you letter of November 12, detailing problems that you are experiencing with your purchase from us. We are always happy to replace faulty products. Please follow the simple process outlined below to (141)-------- the item to us.\n\nFirst, fill in the form enclosed with this letter to tell us what the problem is with your product. Then, remove the sticker that is (142)-------- to the form, and affix it to a suitable box of small packet.\n\nPlace the product inside, and send it to us from any post office, free of charge. If possible, please use the packaging in which the item was delivered to you.\n\nI would like to take this opportunity to express my apologies to you for the problems with your item, and I can assure you that we will do our upmost to deliver a replacement item to you as soon as possible which will meet with your satisfaction.\n\nYours (143)--------,\nPaul Gruber\nHome Products Direct Inc.";
+
+const caffeineArticle =
+  "Tests on the Effectiveness of Caffeine Intake for Alertness\n\nIt is a commonly held belief (144)-------- drinking coffees wakes us up and improves our concentration.\n\nHowever, a recent study has cast doubt on this (145)--------. Researchers studied a group of 100 people over a period of a month. Half the group drank real coffee twice a day, while the other half of the group drank placebos—drinks that they thought were real coffee, but which actually contained no caffeine.\n\nThe researchers then performed daily tests to find out whether the real coffee drinkers were any more (146)-------- than the placebo drinkers.\n\nThe results showed no difference between the reactions of the two groups. Therefore, the study did not conclude that coffee has any of the beneficial effects that many of us believe it to have.";
+
+const blancNoirArticle =
+  "Blanc Noir, the popular fashion retailer, is experimenting with a new kind of advertising. You may have noticed over recent months that the familiar Blanc Noir logo has been popping up on highways and downtown shopping areas. Of course, this in (147)-------- is nothing new or innovative.\n\nHowever, (148)-------- these ads are placed in the usual locations, there is an important difference.\n\nRather than being placed on overhead billboards, these ads are painted onto the ground. Marketing experts say that this technique makes people more likely to (149)-------- the advertisements, and so better raises awareness of the products being advertized. Time will tell whether this is true and whether this new strategy is borne out by higher sales at Blanc Noir stores.";
+
+const awardsEmail =
+  "Date: July 12\nTo: Hambly Employees\nFrom: Sarah Martinez\nSubject: Annual Employee Awards\n\nDear Colleagues,\n\nAhead of this year's Annual Employee Awards Ceremony, I'd like to announce to you all that this year's recipient of the Special Achievement Award will be Harry Kim. As you know, this special award (150)-------- every year since the company was founded in 1962 to the employee who the Board judges to have contributed most significantly to the company over the year.\n\nHarry Kim has been chosen as this year's recipient in recognition of his fine achievements in restructuring the sales and marketing teams. This has led to real benefits, (151)-------- better communication with our regional and local offices, and a new, global approach to marketing which was embodied in the marketing plan that Harry and his team created for the coming year.\n\nAbove all, Harry is known around the company for his (152)-------- personality. He is extremely popular with all his co-workers, and has always been a pleasure to work with. I hope you will all join me in congratulating Harry on receiving the Award, and I look forward to seeing you all at the Ceremony next month.\n\nBest regards,\nSarah Martinez";
+
+const questions: Question[] = [
+  { id: 445, part: 6, set: 3, conversation: wilsonLetter, question: "141. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["delay", "refund", "purchase", "return"], answer: "D" },
+  { id: 446, part: 6, set: 3, conversation: wilsonLetter, question: "142. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["attach", "attaching", "attached", "attachable"], answer: "C" },
+  { id: 447, part: 6, set: 3, conversation: wilsonLetter, question: "143. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["sincerity", "sincerely", "most sincere", "more sincere"], answer: "C" },
+  { id: 448, part: 6, set: 3, conversation: caffeineArticle, question: "144. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["which", "that", "whom", "why"], answer: "B" },
+  { id: 449, part: 6, set: 3, conversation: caffeineArticle, question: "145. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["assumption", "problem", "test", "trial"], answer: "A" },
+  { id: 450, part: 6, set: 3, conversation: caffeineArticle, question: "146. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["alert", "alerts", "alerted", "alerting"], answer: "A" },
+  { id: 451, part: 6, set: 3, conversation: blancNoirArticle, question: "147. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["it", "its", "itself", "it's"], answer: "C" },
+  { id: 452, part: 6, set: 3, conversation: blancNoirArticle, question: "148. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["whenever", "however", "either", "although"], answer: "D" },
+  { id: 453, part: 6, set: 3, conversation: blancNoirArticle, question: "149. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["remember", "remembered", "remembrance", "remembering"], answer: "A" },
+  { id: 454, part: 6, set: 3, conversation: awardsEmail, question: "150. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["presents", "is presented", "has been presented", "is being presented"], answer: "C" },
+  { id: 455, part: 6, set: 3, conversation: awardsEmail, question: "151. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["on the other hand", "rather than", "such as", "prior to"], answer: "C" },
+  { id: 456, part: 6, set: 3, conversation: awardsEmail, question: "152. 빈칸에 들어갈 가장 알맞은 단어를 고르세요.", options: ["cheery", "dry", "unusual", "remote"], answer: "A" },
+];
+
+export default questions;

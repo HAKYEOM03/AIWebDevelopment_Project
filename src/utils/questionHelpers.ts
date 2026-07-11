@@ -66,22 +66,41 @@ export function getQuestions(examId: string, part: string, set: string): Questio
   return questionBank[p]?.[s as number] ?? [];
 }
 
+/** 특정 파트 범위(Part1~4=LC, Part5~7=RC)의 전체 문제를 모아 반환 */
+function collectQuestions(fromPart: number, toPart: number): Question[] {
+  const allQuestions: Question[] = [];
+  for (let p = fromPart; p <= toPart; p++) {
+    const partData = questionBank[p];
+    if (partData) {
+      allQuestions.push(...Object.values(partData).flat());
+    }
+  }
+  return allQuestions;
+}
+
 /**
  * 랜덤 테스트 문제 추출
- * - part 1~4: 해당 파트의 Set 1~3 전체에서 랜덤 15문제
- * - part 0: 전체 Part 1~4 × Set 1~3에서 랜덤 100문제
+ * - part 1~7: 해당 파트의 Set 1~3 전체에서 랜덤 15문제
+ * - part 0: LC 전체(Part 1~4)에서 랜덤 100문제
+ * - part -1: RC 전체(Part 5~7)에서 랜덤 100문제
+ * - part -2: LC+RC 전체(Part 1~7)에서 랜덤 200문제
  */
 function getRandomTestQuestions(part: number): Question[] {
+  if (part === -2) {
+    // LCRC 종합 테스트: LC + RC 전체에서 200문제
+    const shuffled = shuffle(collectQuestions(1, 7));
+    return shuffled.slice(0, Math.min(200, shuffled.length));
+  }
+
+  if (part === -1) {
+    // RC 종합 테스트: Part 5~7 전체에서 100문제
+    const shuffled = shuffle(collectQuestions(5, 7));
+    return shuffled.slice(0, Math.min(100, shuffled.length));
+  }
+
   if (part === 0) {
-    // 종합 테스트: 모든 파트에서 100문제
-    const allQuestions: Question[] = [];
-    for (let p = 1; p <= 4; p++) {
-      const partData = questionBank[p];
-      if (partData) {
-        allQuestions.push(...Object.values(partData).flat());
-      }
-    }
-    const shuffled = shuffle(allQuestions);
+    // LC 종합 테스트: Part 1~4 전체에서 100문제
+    const shuffled = shuffle(collectQuestions(1, 4));
     return shuffled.slice(0, Math.min(100, shuffled.length));
   }
 
@@ -96,8 +115,11 @@ function getRandomTestQuestions(part: number): Question[] {
 /**
  * 테스트 모드의 제한 시간 (초)
  * - 개별 파트: 10분 = 600초
- * - 종합 테스트: 60분 = 3600초
+ * - LC/RC 종합 테스트: 60분 = 3600초
+ * - LCRC 종합 테스트: 120분 = 7200초
  */
 export function getTestTimerSeconds(part: string): number {
-  return part === "0" ? 3600 : 600;
+  if (part === "-2") return 7200;
+  if (part === "0" || part === "-1") return 3600;
+  return 600;
 }

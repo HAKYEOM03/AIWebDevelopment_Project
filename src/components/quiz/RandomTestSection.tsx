@@ -48,19 +48,51 @@ export default function RandomTestSection({ examId }: RandomTestSectionProps) {
           </div>
         ))}
 
-        {/* 종합 테스트 */}
+        {/* LC 종합 테스트 */}
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl shadow-lg p-6 flex items-center justify-between">
           <div className="text-white">
-            <div className="text-lg font-bold">Part 종합 Set Test</div>
+            <div className="text-lg font-bold">LC 전체 문제 Test</div>
             <div className="text-sm opacity-80 mt-1">
-              Part 1~4 전체에서 랜덤 100문제 · 제한시간 60분
+              Part 1~4(LC) 전체에서 랜덤 100문제 · 제한시간 60분
             </div>
           </div>
           <button
             onClick={() => navigate(`/quiz/${examId}/0/test`)}
             className="bg-white text-purple-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors text-sm shrink-0"
           >
-            🏆 종합 시작
+            🏆 LC 종합 시작
+          </button>
+        </div>
+
+        {/* RC 종합 테스트 */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl shadow-lg p-6 flex items-center justify-between">
+          <div className="text-white">
+            <div className="text-lg font-bold">RC 전체 문제 Test</div>
+            <div className="text-sm opacity-80 mt-1">
+              Part 5~7(RC) 전체에서 랜덤 100문제 · 제한시간 60분
+            </div>
+          </div>
+          <button
+            onClick={() => navigate(`/quiz/${examId}/-1/test`)}
+            className="bg-white text-emerald-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors text-sm shrink-0"
+          >
+            🏆 RC 종합 시작
+          </button>
+        </div>
+
+        {/* LCRC 통합 테스트 */}
+        <div className="bg-gradient-to-r from-rose-600 to-orange-500 rounded-2xl shadow-lg p-6 flex items-center justify-between">
+          <div className="text-white">
+            <div className="text-lg font-bold">LCRC 전체 문제 Test</div>
+            <div className="text-sm opacity-80 mt-1">
+              Part 1~7(LC+RC) 전체에서 랜덤 200문제 · 제한시간 120분
+            </div>
+          </div>
+          <button
+            onClick={() => navigate(`/quiz/${examId}/-2/test`)}
+            className="bg-white text-rose-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors text-sm shrink-0"
+          >
+            🏆 LCRC 종합 시작
           </button>
         </div>
       </div>

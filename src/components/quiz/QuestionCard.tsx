@@ -33,7 +33,11 @@ export default function QuestionCard({
       {q.conversation && (
         <div className="bg-gray-100 border border-gray-200 rounded-3xl p-6 mb-5 max-h-96 overflow-y-auto shadow-inner">
           <span className="inline-block bg-gray-700 text-white text-xs px-2.5 py-1 rounded-full font-bold mb-3 tracking-wide">
-            {q.part === 4 ? "TALK" : "CONVERSATION"}
+            {q.part === 4
+              ? "TALK"
+              : q.part === 3
+              ? "CONVERSATION"
+              : "READING PASSAGE"}
           </span>
           <p className="text-base text-gray-800 leading-relaxed font-medium whitespace-pre-line">
             {q.conversation}

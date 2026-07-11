@@ -118,8 +118,15 @@ export default function QuizPage() {
 
   // 라벨
   const partNum = Number(part);
-  const testLabel = partNum === 0 ? "Part 종합 Set Test" : `Part ${part} Set Test`;
-  const timeLimit = partNum === 0 ? "60분" : "10분";
+  const testLabel =
+    partNum === 0
+      ? "LC 전체 문제 Test"
+      : partNum === -1
+      ? "RC 전체 문제 Test"
+      : partNum === -2
+      ? "LCRC 전체 문제 Test"
+      : `Part ${part} Set Test`;
+  const timeLimit = partNum === -2 ? "120분" : partNum === 0 || partNum === -1 ? "60분" : "10분";
 
   const handleSubmit = () => {
     const result = calculateResult();

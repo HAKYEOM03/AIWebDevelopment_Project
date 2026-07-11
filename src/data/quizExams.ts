@@ -19,12 +19,15 @@ export const quizExams: QuizExam[] = [
     name: "영어 졸업고사",
     icon: "📘",
     color: "blue",
-    description: "토익 유형의 영어 연습문제 (Part1~Part4)",
+    description: "토익 유형의 영어 연습문제 (LC Part1~4, RC Part5~7)",
     parts: [
       { part: 1, label: "Part 1 - 사진묘사", sets: [1, 2, 3] },
       { part: 2, label: "Part 2 - 질문응답", sets: [1, 2, 3] },
       { part: 3, label: "Part 3 - 대화내용", sets: [1, 2, 3] },
       { part: 4, label: "Part 4 - 지문내용", sets: [1, 2, 3] },
+      { part: 5, label: "Part 5 - 단문빈칸채우기", sets: [1, 2, 3] },
+      { part: 6, label: "Part 6 - 장문빈칸채우기", sets: [1, 2, 3] },
+      { part: 7, label: "Part 7 - 독해", sets: [1, 2, 3] },
     ],
   },
   {

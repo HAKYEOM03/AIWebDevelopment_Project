@@ -16,7 +16,7 @@ export default function ResultActionButtons({
   onNextPart,
 }: ResultActionButtonsProps) {
   const partNum = Number(part);
-  const nextPart = partNum < 4 ? partNum + 1 : null;
+  const nextPart = partNum >= 1 && partNum < 7 ? partNum + 1 : null;
   const nextPartLabel = nextPart ? `Part ${nextPart}` : "파트 목록";
 
   return (
