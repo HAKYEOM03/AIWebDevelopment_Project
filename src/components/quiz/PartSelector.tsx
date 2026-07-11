@@ -23,20 +23,32 @@ export default function PartSelector({ exam }: PartSelectorProps) {
       </h2>
       <div className="grid grid-cols-1 gap-4">
         {exam.parts.map((p) => (
-          <div key={p.part} className="bg-white rounded-2xl shadow-sm p-5">
-            <div className="font-semibold text-gray-800 mb-3">{p.label}</div>
-            <div className="flex flex-wrap gap-3">
-              {p.sets.map((s) => (
-                <button
-                  key={s}
-                  className={`${setColor(
-                    exam.color
-                  )} text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition-opacity text-sm`}
-                  onClick={() => navigate(`/quiz/${exam.id}/${p.part}/${s}`)}
-                >
-                  Set {s} 풀기
-                </button>
-              ))}
+          <div key={p.part}>
+            {exam.id === "english" && p.part === 1 && (
+              <div className="text-sm font-bold text-blue-600 mb-2 ml-1">
+                🎧 LC 문제
+              </div>
+            )}
+            {exam.id === "english" && p.part === 5 && (
+              <div className="text-sm font-bold text-emerald-600 mb-2 ml-1 mt-2">
+                📖 RC 문제
+              </div>
+            )}
+            <div className="bg-white rounded-2xl shadow-sm p-5">
+              <div className="font-semibold text-gray-800 mb-3">{p.label}</div>
+              <div className="flex flex-wrap gap-3">
+                {p.sets.map((s) => (
+                  <button
+                    key={s}
+                    className={`${setColor(
+                      exam.color
+                    )} text-white px-6 py-2 rounded-xl font-medium hover:opacity-90 transition-opacity text-sm`}
+                    onClick={() => navigate(`/quiz/${exam.id}/${p.part}/${s}`)}
+                  >
+                    Set {s} 풀기
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ))}

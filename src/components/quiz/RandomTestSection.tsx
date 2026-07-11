@@ -5,6 +5,9 @@ const PART_LABELS: Record<number, string> = {
   2: "질문응답",
   3: "대화내용",
   4: "지문내용",
+  5: "단문빈칸채우기",
+  6: "장문빈칸채우기",
+  7: "독해",
 };
 
 interface RandomTestSectionProps {
@@ -25,7 +28,10 @@ export default function RandomTestSection({ examId }: RandomTestSectionProps) {
       </p>
 
       <div className="grid grid-cols-1 gap-4">
-        {/* Part 1 ~ 4 개별 테스트 */}
+        {/* LC 문제 (Part 1~4) */}
+        <div className="text-sm font-bold text-blue-600 -mb-1 ml-1">
+          🎧 LC 문제
+        </div>
         {[1, 2, 3, 4].map((p) => (
           <div
             key={p}
@@ -42,6 +48,32 @@ export default function RandomTestSection({ examId }: RandomTestSectionProps) {
             <button
               onClick={() => navigate(`/quiz/${examId}/${p}/test`)}
               className="bg-purple-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-purple-700 transition-colors text-sm"
+            >
+              🎯 시작
+            </button>
+          </div>
+        ))}
+
+        {/* RC 문제 (Part 5~7) */}
+        <div className="text-sm font-bold text-emerald-600 -mb-1 ml-1 mt-2">
+          📖 RC 문제
+        </div>
+        {[5, 6, 7].map((p) => (
+          <div
+            key={p}
+            className="bg-white rounded-2xl shadow-sm p-5 flex items-center justify-between"
+          >
+            <div>
+              <div className="font-semibold text-gray-800">
+                Part {p} Set Test
+              </div>
+              <div className="text-xs text-gray-400 mt-1">
+                {PART_LABELS[p]} · 랜덤 15문제 · 제한시간 10분
+              </div>
+            </div>
+            <button
+              onClick={() => navigate(`/quiz/${examId}/${p}/test`)}
+              className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-emerald-700 transition-colors text-sm"
             >
               🎯 시작
             </button>
