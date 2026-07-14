@@ -1,6 +1,6 @@
-# 졸업고사 플랫폼 (graduation-exam-platform)
+# 졸업 시험 플랫폼 (graduation-exam-platform)
 
-한국성서대학교 졸업고사 연습 웹 애플리케이션입니다.
+한국성서대학교 졸업 시험 연습 웹 애플리케이션입니다.
 
 ## 기능
 

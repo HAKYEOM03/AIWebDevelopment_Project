@@ -14,7 +14,7 @@ export default function IntroPage() {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">졸업고사 소개</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">졸업 시험 소개</h1>
         <p className="text-gray-500 mb-8">
           시험별 신청 기간, 응시 장소, 시험 조건 및 준비물을 확인하세요.
         </p>

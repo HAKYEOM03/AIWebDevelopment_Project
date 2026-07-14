@@ -23,7 +23,7 @@ export default function ExamDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500 mb-4">존재하지 않는 졸업고사입니다.</p>
+          <p className="text-gray-500 mb-4">존재하지 않는 졸업 시험입니다.</p>
           <button onClick={() => navigate("/")} className="text-blue-600 hover:underline text-sm">
             홈으로 돌아가기
           </button>
@@ -48,7 +48,7 @@ export default function ExamDetailPage() {
         <div className="max-w-5xl mx-auto flex items-center gap-4">
           <span className="text-5xl">{c.icon}</span>
           <div>
-            <div className="text-sm opacity-75 mb-1">졸업고사 상세 정보</div>
+            <div className="text-sm opacity-75 mb-1">졸업 시험 상세 정보</div>
             <h1 className="text-3xl font-bold">{exam.fullName}</h1>
             <p className="text-sm opacity-80 mt-1">
               시험일: {effectiveDate.toLocaleDateString("ko-KR")} · {exam.examTime}

@@ -16,7 +16,7 @@ export interface QuizExam {
 export const quizExams: QuizExam[] = [
   {
     id: "english",
-    name: "영어 졸업고사",
+    name: "영어 졸업 시험",
     icon: "📘",
     color: "blue",
     description: "토익 유형의 영어 연습문제 (LC Part1~4, RC Part5~7)",
@@ -32,7 +32,7 @@ export const quizExams: QuizExam[] = [
   },
   {
     id: "bible",
-    name: "성경 졸업고사",
+    name: "성경 졸업 시험",
     icon: "✝️",
     color: "amber",
     description: "구약·신약 성경 전반의 연습문제",
@@ -43,7 +43,7 @@ export const quizExams: QuizExam[] = [
   },
   {
     id: "computer",
-    name: "컴퓨터 졸업고사",
+    name: "컴퓨터 졸업 시험",
     icon: "💻",
     color: "green",
     description: "ITQ 수준 컴퓨터 활용 능력 연습문제",

@@ -22,7 +22,7 @@ export default function Navbar() {
           </div>
           <div className="leading-tight">
             <div className="text-xs text-gray-500">한국성서대학교</div>
-            <div className="text-sm font-bold text-blue-800">졸업고사 연습</div>
+            <div className="text-sm font-bold text-blue-800">졸업 시험 연습</div>
           </div>
         </Link>
 

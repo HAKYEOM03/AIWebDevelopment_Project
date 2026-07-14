@@ -22,7 +22,7 @@ export default function ManagePage() {
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">졸업고사 관리</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">졸업 시험 관리</h1>
         <p className="text-gray-500 mb-8">
           아래에서 관리할 항목을 선택한 뒤 내용을 수정하고 저장하세요. 저장한
           내용은 홈 화면과 소개 페이지에 즉시 반영됩니다.

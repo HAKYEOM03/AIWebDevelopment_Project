@@ -15,7 +15,7 @@ export interface Applicant {
 }
 
 /**
- * 영어 졸업고사 신청자 명단 (데모용 가상 데이터)
+ * 영어 졸업 시험 신청자 명단 (데모용 가상 데이터)
  *
  * 학번 또는 이름으로 검색하면 해당 신청자의 상세 정보를 동적으로 불러옵니다.
  */
@@ -26,7 +26,7 @@ export const applicants: Applicant[] = [
     name: "김도윤",
     department: "컴퓨터소프트웨어학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-1234-5678",
     email: "doyun.kim@bible.ac.kr",
     appliedDate: "2026-04-01",
@@ -39,7 +39,7 @@ export const applicants: Applicant[] = [
     name: "이서연",
     department: "간호학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-2345-6789",
     email: "seoyeon.lee@bible.ac.kr",
     appliedDate: "2026-04-02",
@@ -52,7 +52,7 @@ export const applicants: Applicant[] = [
     name: "박지호",
     department: "사회복지학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-3456-7890",
     email: "jiho.park@bible.ac.kr",
     appliedDate: "2026-04-02",
@@ -65,7 +65,7 @@ export const applicants: Applicant[] = [
     name: "최유진",
     department: "영유아보육학과",
     grade: 3,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-4567-8901",
     email: "yujin.choi@bible.ac.kr",
     appliedDate: "2026-04-03",
@@ -78,7 +78,7 @@ export const applicants: Applicant[] = [
     name: "정민준",
     department: "컴퓨터소프트웨어학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-5678-9012",
     email: "minjun.jung@bible.ac.kr",
     appliedDate: "2026-04-04",
@@ -91,7 +91,7 @@ export const applicants: Applicant[] = [
     name: "강하은",
     department: "성서학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-6789-0123",
     email: "haeun.kang@bible.ac.kr",
     appliedDate: "2026-04-05",
@@ -104,7 +104,7 @@ export const applicants: Applicant[] = [
     name: "윤서준",
     department: "간호학과",
     grade: 3,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-7890-1234",
     email: "seojun.yoon@bible.ac.kr",
     appliedDate: "2026-04-05",
@@ -117,7 +117,7 @@ export const applicants: Applicant[] = [
     name: "임채원",
     department: "사회복지학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-8901-2345",
     email: "chaewon.lim@bible.ac.kr",
     appliedDate: "2026-04-06",
@@ -130,7 +130,7 @@ export const applicants: Applicant[] = [
     name: "한지우",
     department: "컴퓨터소프트웨어학과",
     grade: 4,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-9012-3456",
     email: "jiwoo.han@bible.ac.kr",
     appliedDate: "2026-04-07",
@@ -143,7 +143,7 @@ export const applicants: Applicant[] = [
     name: "오나윤",
     department: "영유아보육학과",
     grade: 3,
-    subject: "영어 졸업고사",
+    subject: "영어 졸업 시험",
     phone: "010-0123-4567",
     email: "nayoon.oh@bible.ac.kr",
     appliedDate: "2026-04-08",

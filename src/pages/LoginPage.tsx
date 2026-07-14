@@ -30,7 +30,7 @@ export default function LoginPage() {
               KBU
             </div>
             <h1 className="text-2xl font-bold text-gray-800">관리자 로그인</h1>
-            <p className="text-sm text-gray-400 mt-1">한국성서대학교 졸업고사 연습</p>
+            <p className="text-sm text-gray-400 mt-1">한국성서대학교 졸업 시험 연습</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">

@@ -20,7 +20,7 @@ export interface ExamInfo {
 }
 
 /**
- * 졸업고사 정보
+ * 졸업 시험 정보
  *
  * 날짜 수정 방법:
  * - registrationStart: 신청 시작 날짜 (형식: "YYYY-MM-DD")
@@ -33,8 +33,8 @@ export interface ExamInfo {
 export const examInfoList: ExamInfo[] = [
   {
     id: "english",
-    name: "영어졸업고사",
-    fullName: "영어 졸업고사",
+    name: "영어 졸업 시험",
+    fullName: "영어 졸업 시험",
     registrationStart: new Date("2026-03-31"), // 신청 시작
     registrationEnd: new Date("2026-04-08"),   // 신청 종료
     examDate: new Date("2026-06-23"),          // 시험 날짜 (D-DAY 표시됨)
@@ -73,7 +73,7 @@ export const examInfoList: ExamInfo[] = [
         items: [
           "출제 유형: 문법, 독해 (리스닝 포함 없음)",
           "합격 기준: 100점 만점 중 55점 이상",
-          "대비 방법: LMS(영어졸업고사 대비 오디오 파일), 예상문제집(밀알관 지하 1층 복사실 판매)",
+          "대비 방법: LMS(영어 졸업 시험 대비 오디오 파일), 예상문제집(밀알관 지하 1층 복사실 판매)",
         ],
       },
       {
@@ -96,8 +96,8 @@ export const examInfoList: ExamInfo[] = [
   },
   {
     id: "bible",
-    name: "성경졸업고사",
-    fullName: "성경 졸업고사",
+    name: "성경 졸업 시험",
+    fullName: "성경 졸업 시험",
     registrationStart: new Date("2026-04-27"), // 신청 시작
     registrationEnd: new Date("2026-05-08"),   // 신청 종료
     examDate: new Date("2026-06-30"),          // 시험 날짜 (D-DAY 표시됨)
@@ -153,8 +153,8 @@ export const examInfoList: ExamInfo[] = [
   },
   {
     id: "computer",
-    name: "컴퓨터졸업고사",
-    fullName: "컴퓨터 졸업고사",
+    name: "컴퓨터 졸업 시험",
+    fullName: "컴퓨터 졸업 시험",
     registrationStart: new Date("2026-04-06"), // 신청 시작
     registrationEnd: new Date("2026-04-13"),   // 신청 종료
     examDate: new Date("2026-07-23"),          // 시험 날짜 (D-DAY 표시됨)
@@ -204,23 +204,23 @@ export const examInfoList: ExamInfo[] = [
 export const notices = [
   {
     id: 1,
-    title: "2026년 1학기 졸업고사 시행 안내",
+    title: "2026년 1학기 졸업 시험 시행 안내",
     date: "2026-05-01",
-    content: "2026년 1학기 졸업고사가 아래와 같이 시행됩니다. 해당 학생은 반드시 기간 내 신청하시기 바랍니다.",
+    content: "2026년 1학기 졸업 시험가 아래와 같이 시행됩니다. 해당 학생은 반드시 기간 내 신청하시기 바랍니다.",
     important: true,
   },
   {
     id: 2,
-    title: "졸업고사 신청 방법 안내",
+    title: "졸업 시험 신청 방법 안내",
     date: "2026-05-01",
-    content: "포털시스템 → 학사관리 → 졸업고사 신청 메뉴에서 신청하시기 바랍니다.",
+    content: "포털시스템 → 학사관리 → 졸업 시험 신청 메뉴에서 신청하시기 바랍니다.",
     important: false,
   },
   {
     id: 3,
-    title: "영어졸업고사 응시 자격 변경 안내",
+    title: "영어 졸업 시험 응시 자격 변경 안내",
     date: "2026-04-20",
-    content: "2026년부터 영어졸업고사 응시 자격이 변경되었습니다. 자세한 내용은 학사팀으로 문의하세요.",
+    content: "2026년부터 영어 졸업 시험 응시 자격이 변경되었습니다. 자세한 내용은 학사팀으로 문의하세요.",
     important: false,
   },
 ];

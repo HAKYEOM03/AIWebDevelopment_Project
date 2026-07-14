@@ -10,7 +10,7 @@ function cloneContent(content: ExamIntroContent): ExamIntroContent {
   };
 }
 
-/** 졸업고사별 소개 내용(신청기간·장소·준비물·상세안내 등)을 추가/수정/삭제하는 관리 컴포넌트 */
+/** 졸업 시험별 소개 내용(신청기간·장소·준비물·상세안내 등)을 추가/수정/삭제하는 관리 컴포넌트 */
 export default function IntroContentManager() {
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
@@ -106,7 +106,7 @@ export default function IntroContentManager() {
         <span>📝</span> 소개 내용 관리
       </h2>
       <p className="text-sm text-gray-400 mb-5">
-        졸업고사를 선택해 소개 페이지에 표시되는 내용을 수정하고, 저장 버튼을 눌러야
+        졸업 시험를 선택해 소개 페이지에 표시되는 내용을 수정하고, 저장 버튼을 눌러야
         반영됩니다.
       </p>
 

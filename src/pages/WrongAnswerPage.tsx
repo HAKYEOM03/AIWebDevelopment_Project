@@ -29,8 +29,8 @@ export default function WrongAnswerPage() {
 
   const setLabel = set === "all" ? "전체 문제" : `Set ${set}`;
   const examLabel =
-    examId === "english" ? "영어 졸업고사" :
-    examId === "bible" ? "성경 졸업고사" : "컴퓨터 졸업고사";
+    examId === "english" ? "영어 졸업 시험" :
+    examId === "bible" ? "성경 졸업 시험" : "컴퓨터 졸업 시험";
 
   /** 틀린 문제만 다시 풀기 */
   const handleRetryWrongOnly = () => {

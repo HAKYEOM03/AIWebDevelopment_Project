@@ -1,7 +1,7 @@
 /**
  * 시험별 색상 매핑 (공통 유틸)
  *
- * 각 졸업고사 color 값("blue" | "amber" | "green")에 대응하는
+ * 각 졸업 시험 color 값("blue" | "amber" | "green")에 대응하는
  * Tailwind 클래스를 한 곳에서 관리합니다.
  */
 

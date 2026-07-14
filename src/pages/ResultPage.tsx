@@ -45,8 +45,8 @@ export default function ResultPage() {
     ? (partNum === -2 ? "LCRC 랜덤 200문제" : partNum === 0 || partNum === -1 ? "종합 랜덤 100문제" : `랜덤 15문제`)
     : set === "all" ? "전체 문제" : `Set ${set}`;
   const examLabel =
-    examId === "english" ? "영어 졸업고사" :
-    examId === "bible" ? "성경 졸업고사" : "컴퓨터 졸업고사";
+    examId === "english" ? "영어 졸업 시험" :
+    examId === "bible" ? "성경 졸업 시험" : "컴퓨터 졸업 시험";
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">

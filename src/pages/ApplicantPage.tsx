@@ -42,7 +42,7 @@ export default function ApplicantPage() {
       <div className="max-w-6xl mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">신청자 조회</h1>
         <p className="text-gray-500 mb-8">
-          영어 졸업고사 신청 명단입니다. 학번 · 이름 · 학과로 검색한 뒤 신청자를
+          영어 졸업 시험 신청 명단입니다. 학번 · 이름 · 학과로 검색한 뒤 신청자를
           선택하면 상세 정보를 불러옵니다.
         </p>
 
