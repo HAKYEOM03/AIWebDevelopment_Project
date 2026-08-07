@@ -1,27 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAdminAuthenticated, logoutAdmin } from "../../utils/auth";
-import { checkStudentSession, logoutStudent } from "../../api/space";
+import { logoutStudent } from "../../api/space";
+import { useStudentAuth } from "../../context/StudentAuthContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const isAdmin = isAdminAuthenticated();
 
-  // 관리자가 아니면, 학생(학교 API) 로그인 상태를 확인해서 로그인 버튼 자리에 학번을 보여준다.
-  const [studentNum, setStudentNum] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isAdmin) return;
-    let cancelled = false;
-    checkStudentSession().then((result) => {
-      if (cancelled) return;
-      setStudentNum(result.ok ? result.studentNum ?? null : null);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [isAdmin]);
+  // 페이지를 이동해도 다시 물어보지 않고 앱 전체에서 기억하는 로그인 상태.
+  const { studentNum, refresh } = useStudentAuth();
 
   const handleAdminLogout = () => {
     logoutAdmin();
@@ -30,7 +19,7 @@ export default function Navbar() {
 
   const handleStudentLogout = async () => {
     await logoutStudent();
-    setStudentNum(null);
+    await refresh();
     navigate("/login");
   };
 

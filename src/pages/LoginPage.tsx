@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { loginAdmin } from "../utils/auth";
 import { loginStudent } from "../api/space";
+import { useStudentAuth } from "../context/StudentAuthContext";
 
 /**
  * 통합 로그인 페이지.
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { refresh } = useStudentAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ export default function LoginPage() {
         return;
       }
 
+      await refresh();
       navigate("/");
     } catch {
       setError("서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");

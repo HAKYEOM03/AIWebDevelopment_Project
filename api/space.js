@@ -6,7 +6,7 @@
  * - 프론트가 보낸 값을 그대로 학교 API에 전달하지 않고, 필드를 하나씩 직접 조립한다.
  */
 import { verifyStudentLogin, fetchGradExamInfo } from "./_lib/bibleApi.js";
-import { createSessionCookie, getStudentNumFromRequest } from "./_lib/session.js";
+import { createSessionCookie, getStudentNumFromRequest, isHttpsRequest } from "./_lib/session.js";
 
 const ALLOWED_SUBJECTS = ["user", "gradExam"];
 
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         return;
       }
 
-      res.setHeader("Set-Cookie", createSessionCookie(userNum));
+      res.setHeader("Set-Cookie", createSessionCookie(userNum, isHttpsRequest(req)));
       res.status(200).json({ ok: true, studentNum: userNum, userStatus });
       return;
     }

@@ -23,19 +23,36 @@ function sign(payloadB64) {
   return crypto.createHmac("sha256", getSecret()).update(payloadB64).digest("base64url");
 }
 
+function buildCookie(value, maxAgeSeconds, secure) {
+  const parts = [`${COOKIE_NAME}=${value}`, "HttpOnly"];
+  // Secure 쿠키는 https에서만 브라우저가 저장한다.
+  // 로컬 vercel dev(http)에서는 Secure를 붙이면 쿠키 자체가 저장 안 돼서 로그인이 매번 풀린다.
+  if (secure) parts.push("Secure");
+  parts.push("SameSite=Strict", "Path=/", `Max-Age=${maxAgeSeconds}`);
+  return parts.join("; ");
+}
+
+/**
+ * 요청이 https로 온 건지 판단한다. Vercel은 프록시를 거치므로 req.protocol이 아니라
+ * x-forwarded-proto 헤더로 알아야 한다. 로컬 vercel dev는 http라 여기서 false가 나온다.
+ */
+export function isHttpsRequest(req) {
+  return req.headers["x-forwarded-proto"] === "https";
+}
+
 /** 로그인 성공 시 브라우저에 심어줄 Set-Cookie 값 생성 */
-export function createSessionCookie(studentNum) {
+export function createSessionCookie(studentNum, secure = true) {
   const payload = JSON.stringify({ studentNum, exp: Date.now() + SESSION_TTL_MS });
   const payloadB64 = Buffer.from(payload).toString("base64url");
   const signature = sign(payloadB64);
   const token = `${payloadB64}.${signature}`;
 
-  return `${COOKIE_NAME}=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${SESSION_TTL_MS / 1000}`;
+  return buildCookie(token, SESSION_TTL_MS / 1000, secure);
 }
 
 /** 로그아웃 시 쿠키를 지우는 Set-Cookie 값 */
-export function clearSessionCookie() {
-  return `${COOKIE_NAME}=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`;
+export function clearSessionCookie(secure = true) {
+  return buildCookie("", 0, secure);
 }
 
 function parseCookies(cookieHeader) {
