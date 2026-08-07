@@ -51,3 +51,22 @@ export function normalizeGradExamRecord(record: GradExamRecord): DisplayRecord {
     remark: pick(record, ["remark", "remarks", "note", "notes", "etc", "bigo", "comment"]),
   };
 }
+
+/**
+ * 신청 내역을 시험 항목(testItem) 코드별로 묶는다.
+ * 화면에서 "영어 졸업고사" / "성경 졸업 시험" 처럼 과목별로 나눠서 보여줄 때 쓴다.
+ * 코드 순서(0,1,2,3...)대로 정렬해서 반환.
+ */
+export function groupRecordsByTestItem(records: GradExamRecord[]): [string, GradExamRecord[]][] {
+  const groups = new Map<string, GradExamRecord[]>();
+  for (const record of records) {
+    const key = record.testItem ?? "미확인";
+    const list = groups.get(key);
+    if (list) {
+      list.push(record);
+    } else {
+      groups.set(key, [record]);
+    }
+  }
+  return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
+}

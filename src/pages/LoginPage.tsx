@@ -4,7 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import { loginAdmin } from "../utils/auth";
 import { loginStudent, fetchMyGradExam, GradExamRecord } from "../api/space";
 import { getTestItemInfo, getPassFailLabel } from "../data/gradExamCodes";
-import { normalizeGradExamRecord } from "../utils/gradExamRecord";
+import { normalizeGradExamRecord, groupRecordsByTestItem } from "../utils/gradExamRecord";
 
 /**
  * 통합 로그인 페이지.
@@ -67,7 +67,7 @@ export default function LoginPage() {
       <Navbar />
 
       <div className="flex items-center justify-center py-20 px-4">
-        <div className={`bg-white rounded-3xl shadow-sm p-8 w-full transition-all ${studentLoggedIn && records && records.length > 0 ? "max-w-2xl" : "max-w-md"}`}>
+        <div className={`bg-white rounded-3xl shadow-sm p-8 w-full transition-all ${studentLoggedIn && records && records.length > 0 ? "max-w-xl" : "max-w-md"}`}>
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
               KBU
@@ -120,55 +120,61 @@ export default function LoginPage() {
               )}
 
               {records && records.length > 0 && (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {records.map((r, i) => {
-                    const testItem = getTestItemInfo(r.testItem);
-                    const d = normalizeGradExamRecord(r);
-                    const passFailLabel = getPassFailLabel(d.passFail);
-                    const isPass = d.passFail === "1";
-
-                    const stats: { label: string; value: string }[] = [];
-                    if (d.semester) stats.push({ label: "학기", value: d.semester });
-                    if (d.applicationDate) stats.push({ label: "신청일", value: d.applicationDate });
-                    if (d.examDate) stats.push({ label: "응시일", value: d.examDate });
-                    if (d.passingDate) stats.push({ label: "합격 처리일", value: d.passingDate });
-                    if (d.score) stats.push({ label: "점수", value: d.score });
-                    if (d.attendance) stats.push({ label: "응시여부", value: d.attendance });
-
+                <div className="space-y-5">
+                  {groupRecordsByTestItem(records).map(([code, list]) => {
+                    const testItem = getTestItemInfo(code);
                     return (
-                      <div key={i} className="border border-gray-200 rounded-2xl p-4 bg-white">
-                        <div className="flex items-start justify-between gap-2 mb-3">
-                          <div>
-                            <div className="font-bold text-gray-800 text-[15px]">{testItem.label}</div>
-                            {testItem.description && (
-                              <div className="text-xs text-gray-400 mt-0.5">{testItem.description}</div>
-                            )}
-                          </div>
-                          {d.passFail && (
-                            <span
-                              className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-full ${
-                                isPass ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"
-                              }`}
-                            >
-                              {passFailLabel}
-                            </span>
+                      <div key={code}>
+                        <div className="flex items-baseline gap-2 mb-2 px-1">
+                          <span className="font-bold text-gray-800 text-sm">{testItem.label}</span>
+                          {testItem.description && (
+                            <span className="text-xs text-gray-400">{testItem.description}</span>
                           )}
                         </div>
 
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs border-t border-gray-100 pt-3">
-                          {stats.map((s) => (
-                            <div key={s.label} className="flex justify-between gap-2">
-                              <span className="text-gray-400">{s.label}</span>
-                              <span className="text-gray-700 text-right">{s.value}</span>
-                            </div>
-                          ))}
-                        </div>
+                        <div className="space-y-2">
+                          {list.map((r, i) => {
+                            const d = normalizeGradExamRecord(r);
+                            const passFailLabel = getPassFailLabel(d.passFail);
+                            const isPass = d.passFail === "1";
 
-                        {d.remark && (
-                          <div className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-100">
-                            비고: {d.remark}
-                          </div>
-                        )}
+                            const details: string[] = [];
+                            if (d.applicationDate) details.push(`신청 ${d.applicationDate}`);
+                            if (d.examDate) details.push(`응시 ${d.examDate}`);
+                            if (d.passingDate) details.push(`처리 ${d.passingDate}`);
+                            if (d.score) details.push(`점수 ${d.score}`);
+                            if (d.attendance) details.push(d.attendance);
+
+                            return (
+                              <div key={i} className="border border-gray-200 rounded-xl px-4 py-3 bg-white">
+                                <div className="flex items-center justify-between gap-3">
+                                  <span className="font-medium text-gray-700 text-sm">{d.semester}</span>
+                                  {d.passFail && (
+                                    <span
+                                      className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-full ${
+                                        isPass ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"
+                                      }`}
+                                    >
+                                      {passFailLabel}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {details.length > 0 && (
+                                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                                    {details.map((line) => (
+                                      <span key={line}>{line}</span>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {d.remark && (
+                                  <div className="mt-1.5 text-xs text-gray-400">비고: {d.remark}</div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   })}
