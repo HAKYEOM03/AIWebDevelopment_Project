@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { loginAdmin } from "../utils/auth";
-import { loginStudent, fetchMyGradExam, GradExamRecord } from "../api/space";
-import { getTestItemInfo, getPassFailLabel } from "../data/gradExamCodes";
-import { normalizeGradExamRecord, groupRecordsByTestItem } from "../utils/gradExamRecord";
+import { loginStudent } from "../api/space";
 
 /**
  * 통합 로그인 페이지.
@@ -12,16 +10,13 @@ import { normalizeGradExamRecord, groupRecordsByTestItem } from "../utils/gradEx
  * 1) 먼저 관리자 계정인지 확인 (로컬 비교, 즉시)
  * 2) 아니면 학교 API로 학번 로그인 시도
  * 둘 다 실패하면 에러 표시.
+ * 로그인 성공하면 바로 홈으로 이동 — 졸업 시험 결과는 네비게이션의 학번을 눌러서 확인.
  */
 export default function LoginPage() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [studentLoggedIn, setStudentLoggedIn] = useState(false);
-  const [myStudentNum, setMyStudentNum] = useState("");
-  const [records, setRecords] = useState<GradExamRecord[] | null>(null);
 
   const navigate = useNavigate();
 
@@ -45,16 +40,7 @@ export default function LoginPage() {
         return;
       }
 
-      setStudentLoggedIn(true);
-      setMyStudentNum(loginResult.studentNum);
-
-      const gradResult = await fetchMyGradExam();
-      if (gradResult.ok) {
-        setRecords(gradResult.data ?? []);
-      } else {
-        const base = gradResult.error || "졸업 시험 정보를 불러오지 못했습니다.";
-        setError(gradResult.debug ? `${base} (원인: ${gradResult.debug})` : base);
-      }
+      navigate("/");
     } catch {
       setError("서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
@@ -67,7 +53,7 @@ export default function LoginPage() {
       <Navbar />
 
       <div className="flex items-center justify-center py-20 px-4">
-        <div className={`bg-white rounded-3xl shadow-sm p-8 w-full transition-all ${studentLoggedIn && records && records.length > 0 ? "max-w-xl" : "max-w-md"}`}>
+        <div className="bg-white rounded-3xl shadow-sm p-8 w-full max-w-md">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
               KBU
@@ -76,128 +62,43 @@ export default function LoginPage() {
             <p className="text-sm text-gray-400 mt-1">한국성서대학교 졸업 시험 연습</p>
           </div>
 
-          {!studentLoggedIn ? (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">아이디 / 학번</label>
-                <input
-                  type="text"
-                  value={id}
-                  onChange={(e) => setId(e.target.value)}
-                  placeholder="아이디 또는 학번을 입력하세요"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">비밀번호</label>
-                <input
-                  type="password"
-                  value={pw}
-                  onChange={(e) => setPw(e.target.value)}
-                  placeholder="비밀번호를 입력하세요"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors mt-2 disabled:opacity-60"
-              >
-                {loading ? "확인 중..." : "로그인"}
-              </button>
-            </form>
-          ) : (
-            <div className="space-y-4">
-              <div className="bg-blue-50 text-blue-800 text-sm rounded-xl px-4 py-3">
-                <span className="font-bold">{myStudentNum}</span>님으로 로그인되었습니다.
-              </div>
-
-              {error && <p className="text-sm text-red-500">{error}</p>}
-
-              {records && records.length === 0 && (
-                <p className="text-sm text-gray-500 text-center py-4">조회된 졸업 시험 신청 내역이 없습니다.</p>
-              )}
-
-              {records && records.length > 0 && (
-                <div className="space-y-5">
-                  {groupRecordsByTestItem(records).map(([code, list]) => {
-                    const testItem = getTestItemInfo(code);
-                    return (
-                      <div key={code}>
-                        <div className="flex items-baseline gap-2 mb-2 px-1">
-                          <span className="font-bold text-gray-800 text-sm">{testItem.label}</span>
-                          {testItem.description && (
-                            <span className="text-xs text-gray-400">{testItem.description}</span>
-                          )}
-                        </div>
-
-                        <div className="space-y-2">
-                          {list.map((r, i) => {
-                            const d = normalizeGradExamRecord(r);
-                            const passFailLabel = getPassFailLabel(d.passFail);
-                            const isPass = d.passFail === "1";
-
-                            const details: string[] = [];
-                            if (d.applicationDate) details.push(`신청 ${d.applicationDate}`);
-                            if (d.examDate) details.push(`응시 ${d.examDate}`);
-                            if (d.passingDate) details.push(`처리 ${d.passingDate}`);
-                            if (d.score) details.push(`점수 ${d.score}`);
-                            if (d.attendance) details.push(d.attendance);
-
-                            return (
-                              <div key={i} className="border border-gray-200 rounded-xl px-4 py-3 bg-white">
-                                <div className="flex items-center justify-between gap-3">
-                                  <span className="font-medium text-gray-700 text-sm">{d.semester}</span>
-                                  {d.passFail && (
-                                    <span
-                                      className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-full ${
-                                        isPass ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"
-                                      }`}
-                                    >
-                                      {passFailLabel}
-                                    </span>
-                                  )}
-                                </div>
-
-                                {details.length > 0 && (
-                                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
-                                    {details.map((line) => (
-                                      <span key={line}>{line}</span>
-                                    ))}
-                                  </div>
-                                )}
-
-                                {d.remark && (
-                                  <div className="mt-1.5 text-xs text-gray-400">비고: {d.remark}</div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              <button
-                onClick={() => navigate("/")}
-                className="w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors"
-              >
-                사이트 이용 시작하기 →
-              </button>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">아이디 / 학번</label>
+              <input
+                type="text"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                placeholder="아이디 또는 학번을 입력하세요"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
+              />
             </div>
-          )}
-
-          {!studentLoggedIn && (
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">비밀번호</label>
+              <input
+                type="password"
+                value={pw}
+                onChange={(e) => setPw(e.target.value)}
+                placeholder="비밀번호를 입력하세요"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
+              />
+            </div>
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <button
-              className="mt-4 w-full text-center text-sm text-gray-400 hover:text-gray-600"
-              onClick={() => navigate("/")}
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors mt-2 disabled:opacity-60"
             >
-              홈으로 돌아가기
+              {loading ? "확인 중..." : "로그인"}
             </button>
-          )}
+          </form>
+
+          <button
+            className="mt-4 w-full text-center text-sm text-gray-400 hover:text-gray-600"
+            onClick={() => navigate("/")}
+          >
+            홈으로 돌아가기
+          </button>
         </div>
       </div>
     </div>

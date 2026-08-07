@@ -6,6 +6,7 @@ import QuizPage from "../pages/QuizPage";
 import ResultPage from "../pages/ResultPage";
 import WrongAnswerPage from "../pages/WrongAnswerPage";
 import LoginPage from "../pages/LoginPage";
+import MyGradExamPage from "../pages/MyGradExamPage";
 import ExamDetailPage from "../pages/ExamDetailPage";
 import ApplicantPage from "../pages/ApplicantPage";
 import ManagePage from "../pages/ManagePage";
@@ -70,6 +71,14 @@ export default function Router() {
           element={
             <RequireStudent>
               <WrongAnswerPage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/my-grades"
+          element={
+            <RequireStudent>
+              <MyGradExamPage />
             </RequireStudent>
           }
         />

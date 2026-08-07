@@ -75,9 +75,13 @@ export default function Navbar() {
               </Link>
               {studentNum ? (
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-600">
+                  <Link
+                    to="/my-grades"
+                    className="text-sm text-gray-600 hover:text-blue-700 transition-colors"
+                    title="졸업 시험 결과 보기"
+                  >
                     <span className="font-bold text-blue-700">{studentNum}</span>님
-                  </span>
+                  </Link>
                   <button
                     onClick={handleStudentLogout}
                     className="bg-gray-100 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
@@ -135,9 +139,13 @@ export default function Navbar() {
               <Link to="/quiz" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>문제</Link>
               {studentNum ? (
                 <>
-                  <div className="text-gray-700 font-medium py-2">
-                    <span className="font-bold text-blue-700">{studentNum}</span>님
-                  </div>
+                  <Link
+                    to="/my-grades"
+                    className="text-gray-700 font-medium py-2"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span className="font-bold text-blue-700">{studentNum}</span>님의 졸업 시험 결과
+                  </Link>
                   <button
                     className="text-left text-gray-700 font-medium py-2"
                     onClick={() => {
