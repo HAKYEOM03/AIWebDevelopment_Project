@@ -51,11 +51,14 @@ export default function Navbar() {
               <Link to="/quiz" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
                 문제
               </Link>
+              <Link to="/student-login" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                졸업고사 조회
+              </Link>
               <button
                 onClick={() => navigate("/login")}
                 className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-800 transition-colors"
               >
-                관리자 로그인
+                로그인
               </button>
             </>
           )}
@@ -97,7 +100,8 @@ export default function Navbar() {
             <>
               <Link to="/intro" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>소개</Link>
               <Link to="/quiz" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>문제</Link>
-              <Link to="/login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>관리자 로그인</Link>
+              <Link to="/student-login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>졸업고사 조회</Link>
+              <Link to="/login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>로그인</Link>
             </>
           )}
         </div>

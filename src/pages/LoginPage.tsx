@@ -29,7 +29,7 @@ export default function LoginPage() {
             <div className="w-16 h-16 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
               KBU
             </div>
-            <h1 className="text-2xl font-bold text-gray-800">관리자 로그인</h1>
+            <h1 className="text-2xl font-bold text-gray-800">로그인</h1>
             <p className="text-sm text-gray-400 mt-1">한국성서대학교 졸업 시험 연습</p>
           </div>
 
