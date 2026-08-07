@@ -6,15 +6,15 @@
 
 export interface TestItemInfo {
   label: string;
-  /** 면제 사유 등 비고 — 있으면 화면에 작게 같이 표시 */
-  note?: string;
+  /** 이 시험 종류 자체에 대한 고정 설명(면제 사유 등) — 신청 건마다 다른 "비고"와는 다름 */
+  description?: string;
 }
 
 export const TEST_ITEM_LABELS: Record<string, TestItemInfo> = {
-  "0": { label: "영어 졸업고사", note: "자격증" },
+  "0": { label: "영어 졸업고사", description: "자격증" },
   "1": { label: "성경 졸업 시험" },
-  "2": { label: "컴퓨터 졸업시험 1", note: "스프레드시트" },
-  "3": { label: "컴퓨터 졸업시험 2", note: "수업면제 · 파워포인트" },
+  "2": { label: "컴퓨터 졸업시험 1", description: "스프레드시트" },
+  "3": { label: "컴퓨터 졸업시험 2", description: "수업면제 · 파워포인트" },
 };
 
 export function getTestItemInfo(code?: string): TestItemInfo {
