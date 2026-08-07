@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { loginAdmin } from "../utils/auth";
 import { loginStudent, fetchMyGradExam, GradExamRecord } from "../api/space";
+import { getTestItemInfo, getPassFailLabel } from "../data/gradExamCodes";
 
 /**
  * 통합 로그인 페이지.
@@ -119,18 +120,33 @@ export default function LoginPage() {
 
               {records && records.length > 0 && (
                 <div className="space-y-3">
-                  {records.map((r, i) => (
-                    <div key={i} className="border border-gray-200 rounded-xl p-4 text-sm space-y-1">
-                      {r.semester && <div><span className="text-gray-400">학기</span> {r.semester}</div>}
-                      {r.testItem && <div><span className="text-gray-400">시험 항목</span> {r.testItem}</div>}
-                      {r.applicationDate && <div><span className="text-gray-400">신청일</span> {r.applicationDate}</div>}
-                      {r.passingDate && <div><span className="text-gray-400">합격 처리일</span> {r.passingDate}</div>}
-                      {r.passFail && <div><span className="text-gray-400">합격여부 코드</span> {r.passFail}</div>}
-                    </div>
-                  ))}
-                  <p className="text-xs text-gray-400">
-                    * 합격여부 코드의 정확한 의미는 학교 담당자 확인 후 표시로 대체 예정입니다.
-                  </p>
+                  {records.map((r, i) => {
+                    const testItem = getTestItemInfo(r.testItem);
+                    const passFailLabel = getPassFailLabel(r.passFail);
+                    const isPass = r.passFail === "1";
+                    return (
+                      <div key={i} className="border border-gray-200 rounded-xl p-4 text-sm space-y-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-bold text-gray-800">{testItem.label}</span>
+                          {r.passFail && (
+                            <span
+                              className={`text-xs font-bold px-2 py-1 rounded-full ${
+                                isPass ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"
+                              }`}
+                            >
+                              {passFailLabel}
+                            </span>
+                          )}
+                        </div>
+                        {testItem.note && (
+                          <div className="text-xs text-gray-400">비고: {testItem.note}</div>
+                        )}
+                        {r.semester && <div><span className="text-gray-400">학기</span> {r.semester}</div>}
+                        {r.applicationDate && <div><span className="text-gray-400">신청일</span> {r.applicationDate}</div>}
+                        {r.passingDate && <div><span className="text-gray-400">합격 처리일</span> {r.passingDate}</div>}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
