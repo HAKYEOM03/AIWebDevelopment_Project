@@ -6,20 +6,75 @@ import QuizPage from "../pages/QuizPage";
 import ResultPage from "../pages/ResultPage";
 import WrongAnswerPage from "../pages/WrongAnswerPage";
 import LoginPage from "../pages/LoginPage";
-import StudentLoginPage from "../pages/StudentLoginPage";
 import ExamDetailPage from "../pages/ExamDetailPage";
 import ApplicantPage from "../pages/ApplicantPage";
 import ManagePage from "../pages/ManagePage";
 import RequireAdmin from "./RequireAdmin";
+import RequireStudent from "./RequireStudent";
 
 export default function Router() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/intro" element={<IntroPage />} />
-        <Route path="/exam/:examId" element={<ExamDetailPage />} />
-        <Route path="/quiz" element={<QuizSelectPage />} />
+        {/* 학생(학교 API) 로그인 없이는 아래 페이지들을 볼 수 없음 */}
+        <Route
+          path="/"
+          element={
+            <RequireStudent>
+              <HomePage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/intro"
+          element={
+            <RequireStudent>
+              <IntroPage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/exam/:examId"
+          element={
+            <RequireStudent>
+              <ExamDetailPage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/quiz"
+          element={
+            <RequireStudent>
+              <QuizSelectPage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/quiz/:examId/:part/:set"
+          element={
+            <RequireStudent>
+              <QuizPage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/result"
+          element={
+            <RequireStudent>
+              <ResultPage />
+            </RequireStudent>
+          }
+        />
+        <Route
+          path="/wrong-answers"
+          element={
+            <RequireStudent>
+              <WrongAnswerPage />
+            </RequireStudent>
+          }
+        />
+
+        {/* 관리자 전용 — 학생 로그인과 별개, 관리자 로그인으로만 보호 */}
         <Route
           path="/applicants"
           element={
@@ -36,11 +91,9 @@ export default function Router() {
             </RequireAdmin>
           }
         />
-        <Route path="/quiz/:examId/:part/:set" element={<QuizPage />} />
-        <Route path="/result" element={<ResultPage />} />
-        <Route path="/wrong-answers" element={<WrongAnswerPage />} />
+
+        {/* 로그인 페이지 자체는 보호하지 않음 (그래야 들어갈 수 있음) */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/student-login" element={<StudentLoginPage />} />
       </Routes>
     </HashRouter>
   );

@@ -2,9 +2,14 @@
  * 학교(한국성서대) 학사 API 호출 전용 모듈.
  * API 키(BIBLE_API_KEY)를 다루는 코드는 이 파일에만 있고,
  * 다른 코드(라우트 핸들러 등)는 이 파일이 제공하는 함수만 사용한다.
+ *
+ * 학교 API 주소는 지금 "테스트 서버"이고, 심사 통과 후 "실제 서버" 주소로 바뀔 예정이다.
+ * 그때 이 파일을 고칠 필요 없이 Vercel 환경변수 BIBLE_API_URL 값만 바꾸면 되도록
+ * 주소를 코드에 직접 적지 않고 환경변수로 뺀다.
  */
 
-const BIBLE_API_URL = "https://rody.bible.ac.kr/api/Space";
+// 담당자에게 받은 임시(테스트) 주소를 기본값으로 두되, 환경변수가 있으면 그 값을 우선 사용한다.
+const DEFAULT_BIBLE_API_URL = "https://rody.bible.ac.kr/api/Space";
 
 async function callBibleApi(body) {
   const apiKey = process.env.BIBLE_API_KEY;
@@ -12,7 +17,9 @@ async function callBibleApi(body) {
     throw new Error("BIBLE_API_KEY 환경변수가 설정되지 않았습니다. Vercel 프로젝트 설정에서 등록하세요.");
   }
 
-  const response = await fetch(BIBLE_API_URL, {
+  const apiUrl = process.env.BIBLE_API_URL || DEFAULT_BIBLE_API_URL;
+
+  const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

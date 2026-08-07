@@ -1,15 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAdminAuthenticated, logoutAdmin } from "../../utils/auth";
+import { checkStudentSession, logoutStudent } from "../../api/space";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const isAdmin = isAdminAuthenticated();
 
-  const handleLogout = () => {
+  // 관리자가 아니면, 학생(학교 API) 로그인 상태를 확인해서 로그인 버튼 자리에 학번을 보여준다.
+  const [studentNum, setStudentNum] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isAdmin) return;
+    let cancelled = false;
+    checkStudentSession().then((result) => {
+      if (cancelled) return;
+      setStudentNum(result.ok ? result.studentNum ?? null : null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin]);
+
+  const handleAdminLogout = () => {
     logoutAdmin();
     navigate("/");
+  };
+
+  const handleStudentLogout = async () => {
+    await logoutStudent();
+    setStudentNum(null);
+    navigate("/login");
   };
 
   return (
@@ -37,7 +59,7 @@ export default function Navbar() {
                 관리
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={handleAdminLogout}
                 className="bg-gray-100 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
               >
                 로그아웃
@@ -51,15 +73,26 @@ export default function Navbar() {
               <Link to="/quiz" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
                 문제
               </Link>
-              <Link to="/student-login" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-                졸업고사 조회
-              </Link>
-              <button
-                onClick={() => navigate("/login")}
-                className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-800 transition-colors"
-              >
-                로그인
-              </button>
+              {studentNum ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600">
+                    <span className="font-bold text-blue-700">{studentNum}</span>님
+                  </span>
+                  <button
+                    onClick={handleStudentLogout}
+                    className="bg-gray-100 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-800 transition-colors"
+                >
+                  로그인
+                </button>
+              )}
             </>
           )}
         </div>
@@ -90,7 +123,7 @@ export default function Navbar() {
                 className="text-left text-gray-700 font-medium py-2"
                 onClick={() => {
                   setMenuOpen(false);
-                  handleLogout();
+                  handleAdminLogout();
                 }}
               >
                 로그아웃
@@ -100,8 +133,24 @@ export default function Navbar() {
             <>
               <Link to="/intro" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>소개</Link>
               <Link to="/quiz" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>문제</Link>
-              <Link to="/student-login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>졸업고사 조회</Link>
-              <Link to="/login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>로그인</Link>
+              {studentNum ? (
+                <>
+                  <div className="text-gray-700 font-medium py-2">
+                    <span className="font-bold text-blue-700">{studentNum}</span>님
+                  </div>
+                  <button
+                    className="text-left text-gray-700 font-medium py-2"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleStudentLogout();
+                    }}
+                  >
+                    로그아웃
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>로그인</Link>
+              )}
             </>
           )}
         </div>

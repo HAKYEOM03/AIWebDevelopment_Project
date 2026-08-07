@@ -55,6 +55,9 @@ export default async function handler(req, res) {
     res.status(200).json({ ok: true, data });
   } catch (err) {
     console.error("[api/space]", err);
-    res.status(502).json({ ok: false, error: "학교 API 호출 중 오류가 발생했습니다." });
+    // VERCEL_ENV가 "production"이 아닐 때(로컬 vercel dev, 프리뷰)만 실제 에러 메시지를 같이 내려줘서
+    // 터미널 로그 없이도 화면/네트워크 탭에서 바로 원인을 볼 수 있게 한다. 실제 배포(production)에서는 숨김.
+    const debug = process.env.VERCEL_ENV !== "production" ? err.message : undefined;
+    res.status(502).json({ ok: false, error: "학교 API 호출 중 오류가 발생했습니다.", debug });
   }
 }

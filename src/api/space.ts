@@ -9,6 +9,8 @@ export interface StudentLoginResult {
   studentNum?: string;
   userStatus?: string;
   error?: string;
+  /** 로컬 개발(vercel dev)에서만 서버가 같이 내려주는 실제 에러 원인. 배포된 서비스에선 항상 비어있음. */
+  debug?: string;
 }
 
 export interface GradExamRecord {
@@ -24,6 +26,7 @@ export interface GradExamResult {
   ok: boolean;
   data?: GradExamRecord[];
   error?: string;
+  debug?: string;
 }
 
 export async function loginStudent(studentId: string, password: string): Promise<StudentLoginResult> {
@@ -46,4 +49,16 @@ export async function fetchMyGradExam(): Promise<GradExamResult> {
 
 export async function logoutStudent(): Promise<void> {
   await fetch("/api/logout", { method: "POST" });
+}
+
+export interface SessionCheckResult {
+  ok: boolean;
+  studentNum?: string;
+}
+
+/** 사이트 전체 접근을 막기 위해 라우터가 호출하는 함수 — 지금 로그인 상태인지만 확인한다. */
+export async function checkStudentSession(): Promise<SessionCheckResult> {
+  const res = await fetch("/api/me");
+  if (!res.ok) return { ok: false };
+  return res.json();
 }
