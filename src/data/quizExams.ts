@@ -11,6 +11,8 @@ export interface QuizExam {
   color: string;
   description: string;
   parts: ExamPart[];
+  /** true면 문제가 아직 확정 전이라 선택 못 하게 막고 "준비중" 안내를 띄운다 */
+  comingSoon?: boolean;
 }
 
 export const quizExams: QuizExam[] = [
@@ -36,6 +38,7 @@ export const quizExams: QuizExam[] = [
     icon: "✝️",
     color: "amber",
     description: "구약·신약 성경 전반의 연습문제",
+    comingSoon: true,
     parts: [
       { part: 1, label: "Part 1 - 구약", sets: [1] },
       { part: 2, label: "Part 2 - 신약", sets: [1] },
@@ -47,6 +50,7 @@ export const quizExams: QuizExam[] = [
     icon: "💻",
     color: "green",
     description: "ITQ 수준 컴퓨터 활용 능력 연습문제",
+    comingSoon: true,
     parts: [{ part: 1, label: "Part 1 - 한글·엑셀", sets: [1] }],
   },
 ];
