@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { QuizExam } from "../../data/quizExams";
+import { useExamData } from "../../context/ExamDataContext";
 
 interface ExamSelectorProps {
   exams: QuizExam[];
@@ -60,25 +61,25 @@ export default function ExamSelector({
   selectedExam,
   onSelect,
 }: ExamSelectorProps) {
+  const { isExamLocked } = useExamData();
   const [comingSoonExam, setComingSoonExam] = useState<QuizExam | null>(null);
 
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
         {exams.map((e) => {
-          const blocked = e.comingSoon || e.disabled;
+          const blocked = isExamLocked(e.id);
           return (
             <button
               key={e.id}
-              disabled={e.disabled}
               className={`relative border-2 rounded-3xl p-6 text-left transition-all ${
                 blocked
                   ? "bg-gray-50 border-gray-200 opacity-70 cursor-not-allowed"
                   : colorBtn(e.color, selectedExam === e.id)
               }`}
-              onClick={() => (e.comingSoon ? setComingSoonExam(e) : onSelect(e.id))}
+              onClick={() => (blocked ? setComingSoonExam(e) : onSelect(e.id))}
             >
-              {e.comingSoon && (
+              {blocked && (
                 <span className="absolute top-4 right-4 text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
                   준비중
                 </span>

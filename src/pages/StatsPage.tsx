@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { ComingSoonModal } from "../components/quiz/ExamSelector";
-import { quizExams, getExamAvailability } from "../data/quizExams";
+import LockedExamCard from "../components/common/LockedExamCard";
+import LockBar from "../components/manage/LockBar";
+import { useExamData } from "../context/ExamDataContext";
+import { quizExams } from "../data/quizExams";
 import { questionBank } from "../data/english";
 import { logoutAdmin } from "../utils/auth";
 import { fetchStats, StatsData, QuestionStat } from "../api/stats";
@@ -50,7 +52,13 @@ export default function StatsPage() {
   const [sortKey, setSortKey] = useState<SortKey>("rate");
   const [minStudents, setMinStudents] = useState(5);
   const [selected, setSelected] = useState<{ part: number; set: number }>({ part: 1, set: 1 });
-  const [blockedExam, setBlockedExam] = useState<{ icon: string; name: string } | null>(null);
+
+  const { isExamLocked, setExamLocked } = useExamData();
+  const currentExam = quizExams.find((e) => e.id === examId) ?? quizExams[0];
+  const locked = isExamLocked(currentExam.id);
+  // 풀이 기록은 지금 영어만 서버에 쌓인다. 다른 시험 탭에 영어 통계가 보이면 안 된다.
+  const hasStats = currentExam.id === "english";
+  const showStats = hasStats && !locked;
 
   useEffect(() => {
     let cancelled = false;
@@ -115,15 +123,6 @@ export default function StatsPage() {
   const partLabel = (part: number) =>
     english?.parts.find((p) => p.part === part)?.label.replace(/^Part \d+ - /, "") ?? "";
 
-  const handleExamTab = (id: string) => {
-    if (getExamAvailability(id) === "open") {
-      setExamId(id);
-      return;
-    }
-    const exam = quizExams.find((e) => e.id === id);
-    if (exam) setBlockedExam({ icon: exam.icon, name: exam.name });
-  };
-
   const openDetail = (part: number, set: number) => {
     setSelected({ part, set });
     // 선택한 세트의 문제 목록으로 부드럽게 이동
@@ -149,13 +148,14 @@ export default function StatsPage() {
           {quizExams.map((exam) => (
             <button
               key={exam.id}
-              onClick={() => handleExamTab(exam.id)}
+              onClick={() => setExamId(exam.id)}
               className={`px-5 py-2 rounded-full font-medium transition-all text-sm ${
                 examId === exam.id
                   ? "bg-blue-700 text-white"
                   : "bg-white text-gray-600 border hover:bg-gray-100"
               }`}
             >
+              {isExamLocked(exam.id) && "🔒 "}
               {exam.name}
             </button>
           ))}
@@ -178,28 +178,76 @@ export default function StatsPage() {
           </div>
         </div>
 
-        {data?.mock && (
+        <LockBar
+          title={currentExam.name}
+          locked={locked}
+          lockedHint="학생 화면의 소개·문제가 '준비중'으로 막혀 있습니다."
+          openHint="학생 화면에 소개·문제가 공개되어 있습니다. 잠그면 '준비중' 안내가 나옵니다."
+          onChange={(next) => setExamLocked(currentExam.id, next)}
+        />
+
+        {locked && (
+          <LockedExamCard
+            icon={currentExam.icon}
+            name={currentExam.name}
+            buttonLabel="해제"
+            onButtonClick={() => setExamLocked(currentExam.id, false)}
+          />
+        )}
+
+        {!locked && !hasStats && (
+          <section>
+            <h2 className="text-xl font-bold text-gray-700 mb-1">파트·세트별 현황</h2>
+            <p className="text-xs text-gray-400 mb-4">
+              이 시험은 아직 풀이 기록을 저장하지 않아 통계가 없습니다.
+            </p>
+            <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-gray-400 border-b">
+                    <th className="px-5 py-3 font-bold">파트</th>
+                    <th className="px-3 py-3 font-bold">세트</th>
+                    <th className="px-5 py-3 font-bold">오답률</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentExam.parts.flatMap((p) =>
+                    p.sets.map((s) => (
+                      <tr key={`${p.part}-${s}`} className="border-b last:border-0">
+                        <td className="px-5 py-3 text-gray-700">{p.label}</td>
+                        <td className="px-3 py-3 text-gray-500 whitespace-nowrap">Set {s}</td>
+                        <td className="px-5 py-3 text-gray-300">기록 없음</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        {showStats && data?.mock && (
           <div className="mb-6 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm rounded-2xl px-5 py-4">
             <span className="font-bold">개발용 예시 데이터입니다.</span> 실제 학생 기록이 아니며, 구글 시트에 연결되면
             이 표시와 함께 사라지고 실제 기록만 보입니다.
           </div>
         )}
 
-        {loading && <p className="text-center text-gray-400 py-20">불러오는 중...</p>}
+        {showStats && loading && <p className="text-center text-gray-400 py-20">불러오는 중...</p>}
 
-        {!loading && error && (
+        {showStats && !loading && error && (
           <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-2xl px-5 py-4">
             {error}
           </div>
         )}
 
-        {!loading && data && data.totalAnswers === 0 && (
+        {showStats && !loading && data && data.totalAnswers === 0 && (
           <div className="bg-white rounded-3xl shadow-sm text-center text-gray-400 py-20">
             {data.year}년에는 아직 기록된 풀이가 없습니다.
           </div>
         )}
 
-        {!loading && data && data.totalAnswers > 0 && (
+        {showStats && !loading && data && data.totalAnswers > 0 && (
           <div className="space-y-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <SummaryCard label="참여한 학우" value={`${data.participants.toLocaleString()}명`} />
@@ -418,10 +466,6 @@ export default function StatsPage() {
           </div>
         )}
       </div>
-
-      {blockedExam && (
-        <ComingSoonModal icon={blockedExam.icon} name={blockedExam.name} onClose={() => setBlockedExam(null)} />
-      )}
     </div>
   );
 }

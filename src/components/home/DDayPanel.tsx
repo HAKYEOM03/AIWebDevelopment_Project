@@ -1,4 +1,5 @@
 import { ExamInfo } from "../../data/examInfo";
+import { useExamData } from "../../context/ExamDataContext";
 import CountdownTimer from "./CountdownTimer";
 
 interface DDayPanelProps {
@@ -7,6 +8,7 @@ interface DDayPanelProps {
 }
 
 export default function DDayPanel({ exams, examDates }: DDayPanelProps) {
+  const { isDdayLocked } = useExamData();
   return (
     <div className="bg-white rounded-3xl shadow-sm p-6 h-full flex flex-col">
       <h2 className="text-xl font-bold text-gray-800 mb-5 flex items-center gap-2">
@@ -23,6 +25,7 @@ export default function DDayPanel({ exams, examDates }: DDayPanelProps) {
               examDate={examDate}
               examName={exam.fullName}
               color={exam.color as "blue" | "amber" | "green"}
+              locked={isDdayLocked(exam.id)}
             />
           );
         })}

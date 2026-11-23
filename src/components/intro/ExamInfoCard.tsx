@@ -4,7 +4,6 @@ import { getColorSet } from "../../utils/colorMap";
 import { ExamDataContext } from "../../context/ExamDataContext";
 import CountdownTimer from "../home/CountdownTimer";
 import RegistrationStatus from "./RegistrationStatus";
-import { getExamAvailability } from "../../data/quizExams";
 
 const PENDING_TEXT = "--준비중--";
 
@@ -40,12 +39,12 @@ function PendingBody({ exam }: { exam: ExamInfo }) {
 export default function ExamInfoCard({ exam }: { exam: ExamInfo }) {
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { examDates } = examData;
+  const { examDates, isExamLocked } = examData;
   const c = getColorSet(exam.color);
   const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
 
-  // 준비중/비활성 시험은 시험 이름만 또렷하게 두고 나머지는 회색으로 흐리게, 내용은 "--준비중--"으로 보여준다.
-  const muted = getExamAvailability(exam.id) !== "open";
+  // 잠긴(준비중) 시험은 시험 이름만 또렷하게 두고 나머지는 회색으로 흐리게, 내용은 "--준비중--"으로 보여준다.
+  const muted = isExamLocked(exam.id);
 
   return (
     <div className="bg-white rounded-3xl shadow-sm overflow-hidden">

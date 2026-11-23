@@ -1,6 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 import { ExamDataContext, ExamIntroContent } from "../../context/ExamDataContext";
 import { examInfoList } from "../../data/examInfo";
+import { getColorSet } from "../../utils/colorMap";
+import LockedExamCard from "../common/LockedExamCard";
+import LockBar from "./LockBar";
 
 function cloneContent(content: ExamIntroContent): ExamIntroContent {
   return {
@@ -14,7 +17,7 @@ function cloneContent(content: ExamIntroContent): ExamIntroContent {
 export default function IntroContentManager() {
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { introContent, updateIntroContent } = examData;
+  const { introContent, updateIntroContent, isExamLocked, setExamLocked } = examData;
 
   const [selectedExam, setSelectedExam] = useState(examInfoList[0].id);
   const [draft, setDraft] = useState<ExamIntroContent>(() =>
@@ -29,6 +32,8 @@ export default function IntroContentManager() {
   }, [selectedExam]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const exam = examInfoList.find((e) => e.id === selectedExam)!;
+
+  const locked = isExamLocked(selectedExam);
 
   const handleSave = () => {
     updateIntroContent(selectedExam, draft);
@@ -122,12 +127,30 @@ export default function IntroContentManager() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
+            {isExamLocked(e.id) && "🔒 "}
             {e.name}
           </button>
         ))}
       </div>
 
-      <div className="space-y-5">
+      <LockBar
+        title={exam.fullName}
+        locked={locked}
+        lockedHint="학생 화면의 소개·문제가 '준비중'으로 막혀 있습니다. 해제하면 내용을 수정할 수 있습니다."
+        openHint="학생 화면에 소개·문제가 공개되어 있습니다. 잠그면 '준비중' 안내가 나옵니다."
+        onChange={(next) => setExamLocked(selectedExam, next)}
+      />
+
+      {locked && (
+        <LockedExamCard
+          icon={getColorSet(exam.color).icon}
+          name={exam.fullName}
+          buttonLabel="해제"
+          onButtonClick={() => setExamLocked(selectedExam, false)}
+        />
+      )}
+
+      <div className={locked ? "hidden" : "space-y-5"}>
         {/* 신청 기간 */}
         <div className="grid grid-cols-2 gap-3">
           <div>

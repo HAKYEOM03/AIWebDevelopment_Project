@@ -1,17 +1,21 @@
 import { useState } from "react";
 import Navbar from "../components/layout/Navbar";
-import ExamInfoCard from "../components/intro/ExamInfoCard";
 import ExamDetailCard from "../components/intro/ExamDetailCard";
 import { useEffectiveExamList } from "../hooks/useEffectiveExamList";
 import { ComingSoonModal } from "../components/quiz/ExamSelector";
-import { getExamAvailability } from "../data/quizExams";
+import LockedExamCard from "../components/common/LockedExamCard";
+import { useExamData } from "../context/ExamDataContext";
 import { getColorSet } from "../utils/colorMap";
 
 export default function IntroPage() {
-  const [selected, setSelected] = useState<string | null>(null);
-  // 준비중인 시험(성경·컴퓨터) 탭을 눌렀을 때 띄우는 안내 창 정보
+  // 잠긴(준비중) 시험 탭을 눌렀을 때 띄우는 안내 창 정보
   const [blockedExam, setBlockedExam] = useState<{ icon: string; name: string } | null>(null);
   const examInfoList = useEffectiveExamList();
+  const { isExamLocked } = useExamData();
+  // 처음 들어오면 잠기지 않은 첫 번째 시험을 바로 보여준다.
+  const [selected, setSelected] = useState<string | null>(
+    () => examInfoList.find((e) => !isExamLocked(e.id))?.id ?? null
+  );
   const selectedExam = examInfoList.find((e) => e.id === selected) ?? null;
 
   return (
@@ -26,16 +30,6 @@ export default function IntroPage() {
 
         {/* 탭 선택 */}
         <div className="flex gap-3 mb-8 flex-wrap">
-          <button
-            className={`px-5 py-2 rounded-full font-medium transition-all text-sm ${
-              selected === null
-                ? "bg-gray-800 text-white"
-                : "bg-white text-gray-600 border hover:bg-gray-100"
-            }`}
-            onClick={() => setSelected(null)}
-          >
-            전체 보기
-          </button>
           {examInfoList.map((exam) => (
             <button
               key={exam.id}
@@ -49,9 +43,9 @@ export default function IntroPage() {
                   : "bg-white text-gray-600 border hover:bg-gray-100"
               }`}
               onClick={() =>
-                getExamAvailability(exam.id) === "open"
-                  ? setSelected(exam.id)
-                  : setBlockedExam({ icon: getColorSet(exam.color).icon, name: exam.fullName })
+                isExamLocked(exam.id)
+                  ? setBlockedExam({ icon: getColorSet(exam.color).icon, name: exam.fullName })
+                  : setSelected(exam.id)
               }
             >
               {exam.name}
@@ -68,15 +62,11 @@ export default function IntroPage() {
         )}
 
         {/* 콘텐츠 */}
-        {selected === null ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {examInfoList.map((exam) => (
-              <ExamInfoCard key={exam.id} exam={exam} />
-            ))}
-          </div>
-        ) : selectedExam ? (
-          <ExamDetailCard exam={selectedExam} />
-        ) : null}
+        {selectedExam ? (
+          <ExamDetailCard key={selectedExam.id} exam={selectedExam} />
+        ) : (
+          <LockedExamCard icon="🔒" name="졸업 시험 소개" />
+        )}
 
         {/* 공통 유의사항 */}
         <div className="mt-10 bg-yellow-50 border border-yellow-200 rounded-2xl p-6">

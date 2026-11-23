@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Slide } from "../../data/homeSlides";
-import { getExamAvailability } from "../../data/quizExams";
+import { useExamData } from "../../context/ExamDataContext";
 import { ComingSoonModal } from "../quiz/ExamSelector";
 
 interface CarouselProps {
@@ -12,10 +12,11 @@ interface CarouselProps {
 
 export default function Carousel({ slides, current, goTo }: CarouselProps) {
   const navigate = useNavigate();
+  const { isExamLocked } = useExamData();
   const [showComingSoon, setShowComingSoon] = useState(false);
   const slide = slides[current];
-  // 준비중/비활성 시험(성경·컴퓨터) 슬라이드는 회색으로 보여주고, 누르면 이동 대신 안내 창을 띄운다.
-  const muted = slide.examId ? getExamAvailability(slide.examId) !== "open" : false;
+  // 잠긴(준비중) 시험 슬라이드는 회색으로 보여주고, 누르면 이동 대신 안내 창을 띄운다.
+  const muted = slide.examId ? isExamLocked(slide.examId) : false;
 
   const handleSlideClick = () => {
     if (muted) {

@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import ExamSelector from "../components/quiz/ExamSelector";
 import PartSelector from "../components/quiz/PartSelector";
-import { quizExams, getExamAvailability } from "../data/quizExams";
+import { quizExams } from "../data/quizExams";
+import { useExamData } from "../context/ExamDataContext";
 
 interface QuizSelectLocationState {
   examId?: string;
@@ -11,10 +12,11 @@ interface QuizSelectLocationState {
 
 export default function QuizSelectPage() {
   const location = useLocation();
+  const { isExamLocked } = useExamData();
   const requestedExamId = (location.state as QuizSelectLocationState | null)?.examId ?? null;
-  // 준비중/비활성 시험은 다른 화면에서 state로 넘어와도 선택된 상태로 열리지 않게 한다.
+  // 잠긴(준비중) 시험은 다른 화면에서 state로 넘어와도 선택된 상태로 열리지 않게 한다.
   const preselectedExamId =
-    requestedExamId && getExamAvailability(requestedExamId) === "open" ? requestedExamId : null;
+    requestedExamId && !isExamLocked(requestedExamId) ? requestedExamId : null;
   const [selectedExam, setSelectedExam] = useState<string | null>(preselectedExamId);
 
   const exam = quizExams.find((e) => e.id === selectedExam);

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { getColorSet } from "../utils/colorMap";
@@ -8,16 +8,14 @@ import NoticeSection from "../components/exam-detail/NoticeSection";
 import CountdownTimer from "../components/home/CountdownTimer";
 import { ExamDataContext } from "../context/ExamDataContext";
 import { useEffectiveExamList } from "../hooks/useEffectiveExamList";
-import { ComingSoonModal } from "../components/quiz/ExamSelector";
-import { getExamAvailability } from "../data/quizExams";
+import LockedExamCard from "../components/common/LockedExamCard";
 
 export default function ExamDetailPage() {
   const { examId } = useParams<{ examId: string }>();
   const navigate = useNavigate();
-  const [showComingSoon, setShowComingSoon] = useState(false);
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { examDates } = examData;
+  const { examDates, isExamLocked, isDdayLocked } = examData;
   const examInfoList = useEffectiveExamList();
 
   const exam = examInfoList.find((e) => e.id === examId);
@@ -36,9 +34,30 @@ export default function ExamDetailPage() {
   }
 
   const c = getColorSet(exam.color);
-  const availability = getExamAvailability(exam.id);
+
+  // 주소를 직접 입력해서 들어와도 잠긴 시험의 내용은 보여주지 않는다.
+  if (isExamLocked(exam.id)) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="px-4 py-20">
+          <LockedExamCard
+            icon={c.icon}
+            name={exam.fullName}
+            buttonLabel="홈으로"
+            onButtonClick={() => navigate("/")}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const ddayLocked = isDdayLocked(exam.id);
   // 관리 페이지에서 설정한 날짜가 있으면 우선 사용
   const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
+  const examDateText = ddayLocked
+    ? "----"
+    : `${effectiveDate.toLocaleDateString("ko-KR")} · ${exam.examTime}`;
   const now = new Date();
   const isOpen = now >= exam.registrationStart && now <= exam.registrationEnd;
   const isExpired = now > exam.registrationEnd;
@@ -55,7 +74,7 @@ export default function ExamDetailPage() {
             <div className="text-sm opacity-75 mb-1">졸업 시험 상세 정보</div>
             <h1 className="text-3xl font-bold">{exam.fullName}</h1>
             <p className="text-sm opacity-80 mt-1">
-              시험일: {effectiveDate.toLocaleDateString("ko-KR")} · {exam.examTime}
+              시험일: {examDateText}
             </p>
           </div>
         </div>
@@ -67,10 +86,16 @@ export default function ExamDetailPage() {
           examDate={effectiveDate}
           examName={`${exam.fullName} D-DAY`}
           color={exam.color as "blue" | "amber" | "green"}
+          locked={ddayLocked}
         />
 
         {/* 기본 정보 */}
-        <ExamBasicInfo exam={exam} isOpen={isOpen} isExpired={isExpired} />
+        <ExamBasicInfo
+          exam={exam}
+          isOpen={isOpen}
+          isExpired={isExpired}
+          examDateText={examDateText}
+        />
 
         {/* 상세 안내 섹션 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -84,25 +109,12 @@ export default function ExamDetailPage() {
 
         {/* 하단 버튼 */}
         <div className="flex gap-3">
-          {availability === "disabled" ? (
-            <button
-              disabled
-              className="flex-1 bg-gray-200 text-gray-400 cursor-not-allowed font-bold py-3.5 rounded-2xl text-base"
-            >
-              문제 풀기
-            </button>
-          ) : (
-            <button
-              onClick={() =>
-                availability === "comingSoon"
-                  ? setShowComingSoon(true)
-                  : navigate("/quiz", { state: { examId: exam.id } })
-              }
-              className={`flex-1 ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
-            >
-              문제 풀기 →
-            </button>
-          )}
+          <button
+            onClick={() => navigate("/quiz", { state: { examId: exam.id } })}
+            className={`flex-1 ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
+          >
+            문제 풀기 →
+          </button>
           <button
             onClick={() => navigate("/")}
             className="px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3.5 rounded-2xl text-sm transition-colors"
@@ -111,10 +123,6 @@ export default function ExamDetailPage() {
           </button>
         </div>
       </div>
-
-      {showComingSoon && (
-        <ComingSoonModal icon={c.icon} name={exam.fullName} onClose={() => setShowComingSoon(false)} />
-      )}
     </div>
   );
 }

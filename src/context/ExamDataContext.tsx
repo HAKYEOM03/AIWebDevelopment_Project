@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { examInfoList, InfoSection } from "../data/examInfo";
+import { quizExams } from "../data/quizExams";
 
 export interface ExamNotice {
   id: number;
@@ -29,6 +30,12 @@ interface ExamDataContextType {
   deleteNotice: (id: number) => void;
   updateExamDate: (examId: string, isoDate: string) => void;
   updateIntroContent: (examId: string, content: ExamIntroContent) => void;
+  /** 시험 잠금 — 소개·문제·현황을 "준비중"으로 막는다 */
+  isExamLocked: (examId: string) => boolean;
+  setExamLocked: (examId: string, locked: boolean) => void;
+  /** D-DAY 잠금 — 날짜와 카운트다운을 회색 "--"로 가린다 (시험 잠금과 별개) */
+  isDdayLocked: (examId: string) => boolean;
+  setDdayLocked: (examId: string, locked: boolean) => void;
 }
 
 export const ExamDataContext = createContext<ExamDataContextType | null>(null);
@@ -63,6 +70,20 @@ const defaultIntroContent: Record<string, ExamIntroContent> = Object.fromEntries
   ])
 );
 
+// 관리자가 한 번도 바꾸지 않았을 때의 잠금 상태 (quizExams.ts의 lockedByDefault)
+const defaultLocks: Record<string, boolean> = Object.fromEntries(
+  quizExams.map((exam) => [exam.id, !!exam.lockedByDefault])
+);
+
+function loadLocks(key: string): Record<string, boolean> {
+  try {
+    const stored = localStorage.getItem(key);
+    return stored ? { ...defaultLocks, ...JSON.parse(stored) } : defaultLocks;
+  } catch {
+    return defaultLocks;
+  }
+}
+
 export function ExamDataProvider({ children }: { children: ReactNode }) {
   const [notices, setNotices] = useState<ExamNotice[]>(() => {
     try {
@@ -93,6 +114,17 @@ export function ExamDataProvider({ children }: { children: ReactNode }) {
     }
   });
 
+  const [examLocks, setExamLocks] = useState(() => loadLocks("exam_locks"));
+  const [ddayLocks, setDdayLocks] = useState(() => loadLocks("exam_dday_locks"));
+
+  useEffect(() => {
+    localStorage.setItem("exam_locks", JSON.stringify(examLocks));
+  }, [examLocks]);
+
+  useEffect(() => {
+    localStorage.setItem("exam_dday_locks", JSON.stringify(ddayLocks));
+  }, [ddayLocks]);
+
   useEffect(() => {
     localStorage.setItem("exam_notices", JSON.stringify(notices));
   }, [notices]);
@@ -121,6 +153,16 @@ export function ExamDataProvider({ children }: { children: ReactNode }) {
     setIntroContent((prev) => ({ ...prev, [examId]: content }));
   };
 
+  const isExamLocked = (examId: string) => !!examLocks[examId];
+  const setExamLocked = (examId: string, locked: boolean) => {
+    setExamLocks((prev) => ({ ...prev, [examId]: locked }));
+  };
+
+  const isDdayLocked = (examId: string) => !!ddayLocks[examId];
+  const setDdayLocked = (examId: string, locked: boolean) => {
+    setDdayLocks((prev) => ({ ...prev, [examId]: locked }));
+  };
+
   return (
     <ExamDataContext.Provider
       value={{
@@ -131,6 +173,10 @@ export function ExamDataProvider({ children }: { children: ReactNode }) {
         deleteNotice,
         updateExamDate,
         updateIntroContent,
+        isExamLocked,
+        setExamLocked,
+        isDdayLocked,
+        setDdayLocked,
       }}
     >
       {children}

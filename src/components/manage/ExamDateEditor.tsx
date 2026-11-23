@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { ExamDataContext } from "../../context/ExamDataContext";
 import { examInfoList } from "../../data/examInfo";
 import CountdownTimer from "../home/CountdownTimer";
+import LockBar from "./LockBar";
 
 /** ISO 문자열 → datetime-local input 값(YYYY-MM-DDTHH:mm)으로 변환 */
 function toLocalInputValue(iso: string): string {
@@ -17,12 +18,13 @@ function toLocalInputValue(iso: string): string {
 export default function ExamDateEditor() {
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
-  const { examDates, updateExamDate } = examData;
+  const { examDates, updateExamDate, isDdayLocked, setDdayLocked } = examData;
 
   const [selectedExam, setSelectedExam] = useState(examInfoList[0].id);
   const [saved, setSaved] = useState(false);
 
   const exam = examInfoList.find((e) => e.id === selectedExam)!;
+  const locked = isDdayLocked(selectedExam);
   const currentIso = examDates[selectedExam] ?? exam.examDate.toISOString();
 
   const handleChange = (value: string) => {
@@ -54,20 +56,30 @@ export default function ExamDateEditor() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
+            {isDdayLocked(e.id) && "🔒 "}
             {e.name}
           </button>
         ))}
       </div>
+
+      <LockBar
+        title={`${exam.fullName} D-DAY`}
+        locked={locked}
+        lockedHint="홈 화면에 회색 '--'로 표시됩니다. 해제하면 시험 일시를 입력할 수 있습니다."
+        openHint="홈 화면에 D-DAY가 보입니다. 잠그면 회색 '--'로 바뀝니다."
+        onChange={(next) => setDdayLocked(selectedExam, next)}
+      />
 
       {/* 날짜+시간 입력 */}
       <label className="block text-sm font-medium text-gray-600 mb-2">
         {exam.fullName} 시험 일시
       </label>
       <input
-        type="datetime-local"
-        value={toLocalInputValue(currentIso)}
+        type={locked ? "text" : "datetime-local"}
+        value={locked ? "--" : toLocalInputValue(currentIso)}
+        disabled={locked}
         onChange={(e) => handleChange(e.target.value)}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition mb-2"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition mb-2 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
       />
       {saved && (
         <p className="text-xs text-green-600 mb-2">✓ 저장되었습니다.</p>
@@ -80,6 +92,7 @@ export default function ExamDateEditor() {
           examDate={new Date(currentIso)}
           examName={exam.fullName}
           color={exam.color as "blue" | "amber" | "green"}
+          locked={locked}
         />
       </div>
     </div>

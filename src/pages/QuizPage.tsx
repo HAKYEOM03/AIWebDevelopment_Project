@@ -9,6 +9,9 @@ import QuestionCard from "../components/quiz/QuestionCard";
 import QuizControls from "../components/quiz/QuizControls";
 import OmrSheet from "../components/quiz/OmrSheet";
 import { recordQuizResults } from "../api/stats";
+import LockedExamCard from "../components/common/LockedExamCard";
+import { useExamData } from "../context/ExamDataContext";
+import { quizExams } from "../data/quizExams";
 
 export type ExamMode = "PRACTICE" | "EXAM" | "TEST";
 
@@ -21,6 +24,7 @@ export default function QuizPage() {
   const { examId = "english", part = "2", set = "1" } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isExamLocked } = useExamData();
   const locState = (location.state as QuizLocationState) || {};
 
   // 모드 결정
@@ -108,6 +112,25 @@ export default function QuizPage() {
   };
 
   const q = questions[currentIndex];
+
+  // 주소를 직접 입력해서 들어와도 잠긴 시험은 풀 수 없게 한다.
+  if (isExamLocked(examId)) {
+    const exam = quizExams.find((e) => e.id === examId);
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="px-4 py-20">
+          <LockedExamCard
+            icon={exam?.icon ?? "🔒"}
+            name={exam?.name ?? "졸업 시험"}
+            message="문제 준비중입니다."
+            buttonLabel="문제 목록으로"
+            onButtonClick={() => navigate("/quiz")}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (questions.length === 0) {
     return (

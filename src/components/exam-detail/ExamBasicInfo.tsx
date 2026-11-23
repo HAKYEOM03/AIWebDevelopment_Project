@@ -10,12 +10,15 @@ interface ExamBasicInfoProps {
   exam: ExamInfo;
   isOpen: boolean;
   isExpired: boolean;
+  /** 시험 일자 자리에 보여줄 글자 (D-DAY가 잠겨 있으면 "----") */
+  examDateText: string;
 }
 
 export default function ExamBasicInfo({
   exam,
   isOpen,
   isExpired,
+  examDateText,
 }: ExamBasicInfoProps) {
   return (
     <div className="bg-white rounded-2xl shadow-sm p-6">
@@ -56,7 +59,7 @@ export default function ExamBasicInfo({
             시험 일자
           </div>
           <p className="text-sm text-gray-700">
-            {exam.examDate.toLocaleDateString("ko-KR")} {exam.examTime}
+            {examDateText}
           </p>
         </div>
         <div>
