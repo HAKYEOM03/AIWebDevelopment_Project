@@ -7,6 +7,8 @@ import CountdownTimer from "../home/CountdownTimer";
 import RegistrationStatus from "./RegistrationStatus";
 import NoticeSection from "../exam-detail/NoticeSection";
 import InfoSectionCard from "../exam-detail/InfoSectionCard";
+import { ComingSoonModal } from "../quiz/ExamSelector";
+import { getExamAvailability } from "../../data/quizExams";
 
 /** 개별 탭 선택 시 상세 카드 (공지사항 포함, 입력은 관리 페이지에서) */
 export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
@@ -18,6 +20,8 @@ export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
   // 관리 페이지에서 설정한 날짜가 있으면 우선 사용
   const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
   const [showMore, setShowMore] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const availability = getExamAvailability(exam.id);
 
   return (
     <div className="bg-white rounded-3xl shadow-sm overflow-hidden max-w-3xl mx-auto w-full">
@@ -98,14 +102,31 @@ export default function ExamDetailCard({ exam }: { exam: ExamInfo }) {
         {/* 공지사항 (exam-detail 컴포넌트 재사용) */}
         <NoticeSection examId={exam.id} />
 
-        {/* 문제 풀기 버튼 (해당 졸업 시험로 바로 진입) */}
-        <button
-          onClick={() => navigate("/quiz", { state: { examId: exam.id } })}
-          className={`w-full ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
-        >
-          문제 풀기 →
-        </button>
+        {/* 문제 풀기 버튼 (해당 졸업 시험로 바로 진입) — 시험별 이용 가능 여부에 따라 동작이 다름 */}
+        {availability === "disabled" ? (
+          <button
+            disabled
+            className="w-full bg-gray-200 text-gray-400 cursor-not-allowed font-bold py-3.5 rounded-2xl text-base"
+          >
+            문제 풀기
+          </button>
+        ) : (
+          <button
+            onClick={() =>
+              availability === "comingSoon"
+                ? setShowComingSoon(true)
+                : navigate("/quiz", { state: { examId: exam.id } })
+            }
+            className={`w-full ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
+          >
+            문제 풀기 →
+          </button>
+        )}
       </div>
+
+      {showComingSoon && (
+        <ComingSoonModal icon={c.icon} name={exam.fullName} onClose={() => setShowComingSoon(false)} />
+      )}
     </div>
   );
 }

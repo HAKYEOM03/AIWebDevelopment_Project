@@ -8,6 +8,7 @@ import QuizTimer from "../components/quiz/QuizTimer";
 import QuestionCard from "../components/quiz/QuestionCard";
 import QuizControls from "../components/quiz/QuizControls";
 import OmrSheet from "../components/quiz/OmrSheet";
+import { recordQuizResults } from "../api/stats";
 
 export type ExamMode = "PRACTICE" | "EXAM" | "TEST";
 
@@ -126,10 +127,26 @@ export default function QuizPage() {
       : partNum === -2
       ? "LCRC 전체 문제 Test"
       : `Part ${part} Set Test`;
-  const timeLimit = partNum === -2 ? "120분" : partNum === 0 || partNum === -1 ? "60분" : "10분";
+  const timeLimit = partNum === -2 ? "120분" : partNum === 0 || partNum === -1 ? "100분" : "10분";
 
   const handleSubmit = () => {
     const result = calculateResult();
+
+    // 관리자 통계용 기록 — 문제별 정답/오답만 보내고(학번 제외), 실패해도 학생 화면엔 영향 없음.
+    // "틀린 문제만 다시 풀기"는 이미 기록된 문제의 반복이라 집계에서 제외한다.
+    if (!isRetryWrongOnly) {
+      recordQuizResults(
+        questions.map((qItem, i) => ({
+          examId,
+          part: qItem.part,
+          set: qItem.set,
+          qid: qItem.id,
+          correct: answers[i] === qItem.answer,
+          mode: isTestMode ? "TEST" : mode === "EXAM" ? "EXAM" : "SET",
+        }))
+      );
+    }
+
     navigate("/result", {
       state: {
         examId, part, set, questions,

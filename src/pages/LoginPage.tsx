@@ -8,7 +8,7 @@ import { useStudentAuth } from "../context/StudentAuthContext";
 /**
  * 통합 로그인 페이지.
  * 같은 아이디/비밀번호 입력창 하나로:
- * 1) 먼저 관리자 계정인지 확인 (로컬 비교, 즉시)
+ * 1) 먼저 관리자 계정인지 서버에서 확인
  * 2) 아니면 학교 API로 학번 로그인 시도
  * 둘 다 실패하면 에러 표시.
  * 로그인 성공하면 바로 홈으로 이동 — 졸업 시험 결과는 네비게이션의 학번을 눌러서 확인.
@@ -26,15 +26,15 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    // 1) 관리자 계정인지 먼저 확인 (즉시 판정, 네트워크 필요 없음)
-    if (loginAdmin(id, pw)) {
-      navigate("/manage");
-      return;
-    }
-
-    // 2) 아니면 학교 API로 학번 로그인 시도
     setLoading(true);
     try {
+      // 1) 관리자 계정인지 서버에서 먼저 확인
+      if (await loginAdmin(id, pw)) {
+        navigate("/manage");
+        return;
+      }
+
+      // 2) 아니면 학교 API로 학번 로그인 시도
       const loginResult = await loginStudent(id, pw);
       if (!loginResult.ok || !loginResult.studentNum) {
         const base = loginResult.error || "아이디/학번 또는 비밀번호가 올바르지 않습니다.";

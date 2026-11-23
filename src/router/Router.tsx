@@ -8,7 +8,8 @@ import WrongAnswerPage from "../pages/WrongAnswerPage";
 import LoginPage from "../pages/LoginPage";
 import MyGradExamPage from "../pages/MyGradExamPage";
 import ExamDetailPage from "../pages/ExamDetailPage";
-import ApplicantPage from "../pages/ApplicantPage";
+import StatsPage from "../pages/StatsPage";
+import MyStatsPage from "../pages/MyStatsPage";
 import ManagePage from "../pages/ManagePage";
 import RequireAdmin from "./RequireAdmin";
 import RequireStudent from "./RequireStudent";
@@ -83,12 +84,21 @@ export default function Router() {
           }
         />
 
+        <Route
+          path="/my-stats"
+          element={
+            <RequireStudent>
+              <MyStatsPage />
+            </RequireStudent>
+          }
+        />
+
         {/* 관리자 전용 — 학생 로그인과 별개, 관리자 로그인으로만 보호 */}
         <Route
-          path="/applicants"
+          path="/stats"
           element={
             <RequireAdmin>
-              <ApplicantPage />
+              <StatsPage />
             </RequireAdmin>
           }
         />

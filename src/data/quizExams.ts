@@ -11,8 +11,10 @@ export interface QuizExam {
   color: string;
   description: string;
   parts: ExamPart[];
-  /** true면 문제가 아직 확정 전이라 선택 못 하게 막고 "준비중" 안내를 띄운다 */
+  /** true면 문제가 아직 확정 전이라 선택 못 하게 막고 "준비중" 안내 창을 띄운다 */
   comingSoon?: boolean;
+  /** true면 연습 대상에서 제외한 시험이라 버튼을 회색으로 비활성화하고 아예 클릭되지 않게 한다 (안내 창도 없음) */
+  disabled?: boolean;
 }
 
 export const quizExams: QuizExam[] = [
@@ -50,7 +52,17 @@ export const quizExams: QuizExam[] = [
     icon: "💻",
     color: "green",
     description: "ITQ 수준 컴퓨터 활용 능력 연습문제",
-    comingSoon: true,
+    disabled: true,
     parts: [{ part: 1, label: "Part 1 - 한글·엑셀", sets: [1] }],
   },
 ];
+
+export type ExamAvailability = "open" | "comingSoon" | "disabled";
+
+/** 시험 id로 문제 풀기 가능 여부를 알려준다 — 여러 화면의 "문제 풀기" 버튼이 같은 기준을 쓰도록 한 곳에서 판단. */
+export function getExamAvailability(examId: string): ExamAvailability {
+  const exam = quizExams.find((e) => e.id === examId);
+  if (exam?.disabled) return "disabled";
+  if (exam?.comingSoon) return "comingSoon";
+  return "open";
+}

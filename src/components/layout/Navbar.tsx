@@ -41,8 +41,8 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           {isAdmin ? (
             <>
-              <Link to="/applicants" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-                신청자 조회
+              <Link to="/stats" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                연습문제 현황
               </Link>
               <Link to="/manage" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
                 관리
@@ -62,6 +62,11 @@ export default function Navbar() {
               <Link to="/quiz" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
                 문제
               </Link>
+              {studentNum && (
+                <Link to="/my-stats" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+                  나의 현황
+                </Link>
+              )}
               {studentNum ? (
                 <div className="flex items-center gap-3">
                   <Link
@@ -110,7 +115,7 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t px-4 py-3 flex flex-col gap-3">
           {isAdmin ? (
             <>
-              <Link to="/applicants" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>신청자 조회</Link>
+              <Link to="/stats" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>연습문제 현황</Link>
               <Link to="/manage" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>관리</Link>
               <button
                 className="text-left text-gray-700 font-medium py-2"
@@ -126,6 +131,9 @@ export default function Navbar() {
             <>
               <Link to="/intro" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>소개</Link>
               <Link to="/quiz" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>문제</Link>
+              {studentNum && (
+                <Link to="/my-stats" className="text-gray-700 font-medium py-2" onClick={() => setMenuOpen(false)}>나의 현황</Link>
+              )}
               {studentNum ? (
                 <>
                   <Link

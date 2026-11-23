@@ -7,3 +7,6 @@ dist/
 
 .vercel
 .env*
+
+# .env.local.example은 실제 비밀값이 없는 안내용 파일이라 예외로 GitHub에 올림
+!.env.local.example

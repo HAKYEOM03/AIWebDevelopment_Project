@@ -12,6 +12,12 @@ export default function RequireStudent({ children }: { children: ReactNode }) {
   const isAdmin = isAdminAuthenticated();
   const { studentNum, loading } = useStudentAuth();
 
+  // 로컬 개발 전용 스위치 — .env.local에 VITE_SKIP_AUTH=true를 넣으면 로그인 없이 전체 화면 접근 가능.
+  // 이 값은 빌드 시 결정되고 실제 배포(Vercel)에는 이 변수를 등록하지 않으니 실서비스엔 영향 없음.
+  if (import.meta.env.VITE_SKIP_AUTH === "true") {
+    return <>{children}</>;
+  }
+
   if (isAdmin) {
     return <>{children}</>;
   }

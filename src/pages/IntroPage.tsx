@@ -3,9 +3,14 @@ import Navbar from "../components/layout/Navbar";
 import ExamInfoCard from "../components/intro/ExamInfoCard";
 import ExamDetailCard from "../components/intro/ExamDetailCard";
 import { useEffectiveExamList } from "../hooks/useEffectiveExamList";
+import { ComingSoonModal } from "../components/quiz/ExamSelector";
+import { getExamAvailability } from "../data/quizExams";
+import { getColorSet } from "../utils/colorMap";
 
 export default function IntroPage() {
   const [selected, setSelected] = useState<string | null>(null);
+  // 준비중인 시험(성경·컴퓨터) 탭을 눌렀을 때 띄우는 안내 창 정보
+  const [blockedExam, setBlockedExam] = useState<{ icon: string; name: string } | null>(null);
   const examInfoList = useEffectiveExamList();
   const selectedExam = examInfoList.find((e) => e.id === selected) ?? null;
 
@@ -43,12 +48,24 @@ export default function IntroPage() {
                     : "bg-green-700 text-white"
                   : "bg-white text-gray-600 border hover:bg-gray-100"
               }`}
-              onClick={() => setSelected(exam.id)}
+              onClick={() =>
+                getExamAvailability(exam.id) === "open"
+                  ? setSelected(exam.id)
+                  : setBlockedExam({ icon: getColorSet(exam.color).icon, name: exam.fullName })
+              }
             >
               {exam.name}
             </button>
           ))}
         </div>
+
+        {blockedExam && (
+          <ComingSoonModal
+            icon={blockedExam.icon}
+            name={blockedExam.name}
+            onClose={() => setBlockedExam(null)}
+          />
+        )}
 
         {/* 콘텐츠 */}
         {selected === null ? (

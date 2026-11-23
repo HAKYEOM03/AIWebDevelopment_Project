@@ -42,7 +42,7 @@ export default function ResultPage() {
     partNum === 6 ? "장문 빈칸 채우기 (Text Completion)" :
     partNum === 7 ? "독해 (Reading Comprehension)" : `Part ${part}`;
   const setLabel = isTestMode
-    ? (partNum === -2 ? "LCRC 랜덤 200문제" : partNum === 0 || partNum === -1 ? "종합 랜덤 100문제" : `랜덤 15문제`)
+    ? (partNum === -2 ? "LCRC 랜덤 100문제" : partNum === 0 || partNum === -1 ? "종합 랜덤 100문제" : `랜덤 15문제`)
     : set === "all" ? "전체 문제" : `Set ${set}`;
   const examLabel =
     examId === "english" ? "영어 졸업 시험" :
@@ -104,6 +104,18 @@ export default function ResultPage() {
             }}
           />
         </div>
+
+        {/* 내 약점 보러가기 — 영어 졸업 시험 기록만 통계에 쌓인다 */}
+        {examId === "english" && (
+          <div className="mb-6 text-center">
+            <button
+              onClick={() => navigate("/my-stats")}
+              className="text-sm text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-full px-5 py-2.5 font-medium transition-colors"
+            >
+              📊 나의 연습문제 현황 보기 (가장 약한 문제 확인)
+            </button>
+          </div>
+        )}
 
         {/* 문항별 결과 */}
         <div>

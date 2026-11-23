@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { getColorSet } from "../utils/colorMap";
@@ -8,10 +8,13 @@ import NoticeSection from "../components/exam-detail/NoticeSection";
 import CountdownTimer from "../components/home/CountdownTimer";
 import { ExamDataContext } from "../context/ExamDataContext";
 import { useEffectiveExamList } from "../hooks/useEffectiveExamList";
+import { ComingSoonModal } from "../components/quiz/ExamSelector";
+import { getExamAvailability } from "../data/quizExams";
 
 export default function ExamDetailPage() {
   const { examId } = useParams<{ examId: string }>();
   const navigate = useNavigate();
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const examData = useContext(ExamDataContext);
   if (!examData) throw new Error("ExamDataProvider가 필요합니다.");
   const { examDates } = examData;
@@ -33,6 +36,7 @@ export default function ExamDetailPage() {
   }
 
   const c = getColorSet(exam.color);
+  const availability = getExamAvailability(exam.id);
   // 관리 페이지에서 설정한 날짜가 있으면 우선 사용
   const effectiveDate = examDates[exam.id] ? new Date(examDates[exam.id]) : exam.examDate;
   const now = new Date();
@@ -80,12 +84,25 @@ export default function ExamDetailPage() {
 
         {/* 하단 버튼 */}
         <div className="flex gap-3">
-          <button
-            onClick={() => navigate("/quiz", { state: { examId: exam.id } })}
-            className={`flex-1 ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
-          >
-            문제 풀기 →
-          </button>
+          {availability === "disabled" ? (
+            <button
+              disabled
+              className="flex-1 bg-gray-200 text-gray-400 cursor-not-allowed font-bold py-3.5 rounded-2xl text-base"
+            >
+              문제 풀기
+            </button>
+          ) : (
+            <button
+              onClick={() =>
+                availability === "comingSoon"
+                  ? setShowComingSoon(true)
+                  : navigate("/quiz", { state: { examId: exam.id } })
+              }
+              className={`flex-1 ${c.btn} ${c.btnHover} text-white font-bold py-3.5 rounded-2xl text-base transition-colors`}
+            >
+              문제 풀기 →
+            </button>
+          )}
           <button
             onClick={() => navigate("/")}
             className="px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3.5 rounded-2xl text-sm transition-colors"
@@ -94,6 +111,10 @@ export default function ExamDetailPage() {
           </button>
         </div>
       </div>
+
+      {showComingSoon && (
+        <ComingSoonModal icon={c.icon} name={exam.fullName} onClose={() => setShowComingSoon(false)} />
+      )}
     </div>
   );
 }

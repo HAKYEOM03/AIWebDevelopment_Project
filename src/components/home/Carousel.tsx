@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Slide } from "../../data/homeSlides";
+import { getExamAvailability } from "../../data/quizExams";
+import { ComingSoonModal } from "../quiz/ExamSelector";
 
 interface CarouselProps {
   slides: Slide[];
@@ -9,7 +12,18 @@ interface CarouselProps {
 
 export default function Carousel({ slides, current, goTo }: CarouselProps) {
   const navigate = useNavigate();
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const slide = slides[current];
+  // 준비중/비활성 시험(성경·컴퓨터) 슬라이드는 회색으로 보여주고, 누르면 이동 대신 안내 창을 띄운다.
+  const muted = slide.examId ? getExamAvailability(slide.examId) !== "open" : false;
+
+  const handleSlideClick = () => {
+    if (muted) {
+      setShowComingSoon(true);
+      return;
+    }
+    navigate(slide.examId ? `/exam/${slide.examId}` : "/intro");
+  };
 
   return (
     <div className="relative bg-slate-200 py-16 px-4 flex items-center justify-center min-h-[500px]">
@@ -37,10 +51,10 @@ export default function Carousel({ slides, current, goTo }: CarouselProps) {
       <div className="w-full max-w-[320px] md:max-w-[340px] px-2 z-0">
         <div
           key={slide.id}
-          onClick={() =>
-            slide.examId ? navigate(`/exam/${slide.examId}`) : navigate("/intro")
-          }
-          className={`cursor-pointer rounded-r-2xl shadow-2xl overflow-hidden bg-gradient-to-br ${slide.bg} aspect-[3/4] p-7 flex flex-col justify-between text-white relative border-l-[14px] border-black/20 transform transition-all duration-500 hover:scale-105 hover:-rotate-1 active:scale-98`}
+          onClick={handleSlideClick}
+          className={`cursor-pointer rounded-r-2xl shadow-2xl overflow-hidden bg-gradient-to-br ${
+            muted ? "from-gray-400 to-gray-600" : slide.bg
+          } aspect-[3/4] p-7 flex flex-col justify-between text-white relative border-l-[14px] border-black/20 transform transition-all duration-500 hover:scale-105 hover:-rotate-1 active:scale-98`}
         >
           <div className="absolute top-0 left-0 w-[2px] h-full bg-white/20" />
           <div className="absolute top-0 left-[2px] w-[1px] h-full bg-black/10" />
@@ -53,7 +67,9 @@ export default function Carousel({ slides, current, goTo }: CarouselProps) {
             </span>
           </div>
           <div className="my-auto text-center px-2">
-            <div className="text-5xl mb-4 filter drop-shadow-md">{slide.emoji}</div>
+            <div className={`text-5xl mb-4 filter drop-shadow-md ${muted ? "grayscale opacity-60" : ""}`}>
+              {slide.emoji}
+            </div>
             <h1 className="text-2xl md:text-3xl font-extrabold mb-2 tracking-tight leading-snug drop-shadow-sm">
               {slide.title}
             </h1>
@@ -87,6 +103,14 @@ export default function Carousel({ slides, current, goTo }: CarouselProps) {
           />
         </svg>
       </button>
+
+      {showComingSoon && (
+        <ComingSoonModal
+          icon={slide.emoji}
+          name={slide.title}
+          onClose={() => setShowComingSoon(false)}
+        />
+      )}
 
       {/* 도트 인디케이터 */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">

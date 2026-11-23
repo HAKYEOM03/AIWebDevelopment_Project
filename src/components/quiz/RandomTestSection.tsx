@@ -10,22 +10,35 @@ const PART_LABELS: Record<number, string> = {
   7: "독해",
 };
 
+/** 사진 묘사(Part 1)가 들어가는 화면(LC 탭, 랜덤 Set Test)에서 공통으로 쓰는 빨간 유의 문구 */
+export function ImageCaution({ className = "" }: { className?: string }) {
+  return (
+    <p className={`text-sm font-medium text-red-500 ${className}`}>
+      ** 유의: 사진 묘사(Part 1) 문제의 그림은 이 웹페이지에서 연습용으로 제작한 이미지라서, 실제 시험
+      문제지의 그림과 다를 수 있습니다.
+    </p>
+  );
+}
+
 interface RandomTestSectionProps {
   examId: string;
+  /** true면 이 섹션만 따로 보여주는 탭이라, 위쪽 파트 목록과 띄우던 간격(mt-8)이 필요 없다 */
+  standalone?: boolean;
 }
 
 /** 랜덤 Set Test 섹션 (Part별 15문제 + 종합 100문제) */
-export default function RandomTestSection({ examId }: RandomTestSectionProps) {
+export default function RandomTestSection({ examId, standalone = false }: RandomTestSectionProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="mt-8">
+    <div className={standalone ? "" : "mt-8"}>
       <h2 className="text-xl font-bold text-gray-700 mb-4 flex items-center gap-2">
         🎯 랜덤 Set Test
       </h2>
-      <p className="text-sm text-gray-400 mb-4">
+      <p className="text-sm text-gray-400 mb-2">
         각 파트의 Set 1~3 문제를 랜덤으로 출제합니다. 시간 내에 풀어야 합니다!
       </p>
+      <ImageCaution className="mb-4" />
 
       <div className="grid grid-cols-1 gap-4">
         {/* LC 문제 (Part 1~4) */}
@@ -85,7 +98,7 @@ export default function RandomTestSection({ examId }: RandomTestSectionProps) {
           <div className="text-white">
             <div className="text-lg font-bold">LC 전체 문제 Test</div>
             <div className="text-sm opacity-80 mt-1">
-              Part 1~4(LC) 전체에서 랜덤 100문제 · 제한시간 60분
+              Part 1~4(LC) 전체에서 랜덤 100문제 · 제한시간 100분
             </div>
           </div>
           <button
@@ -101,7 +114,7 @@ export default function RandomTestSection({ examId }: RandomTestSectionProps) {
           <div className="text-white">
             <div className="text-lg font-bold">RC 전체 문제 Test</div>
             <div className="text-sm opacity-80 mt-1">
-              Part 5~7(RC) 전체에서 랜덤 100문제 · 제한시간 60분
+              Part 5~7(RC) 전체에서 랜덤 100문제 · 제한시간 100분
             </div>
           </div>
           <button
@@ -117,7 +130,7 @@ export default function RandomTestSection({ examId }: RandomTestSectionProps) {
           <div className="text-white">
             <div className="text-lg font-bold">LCRC 전체 문제 Test</div>
             <div className="text-sm opacity-80 mt-1">
-              Part 1~7(LC+RC) 전체에서 랜덤 200문제 · 제한시간 120분
+              Part 1~7(LC+RC) 전체에서 랜덤 100문제 · 제한시간 120분
             </div>
           </div>
           <button
