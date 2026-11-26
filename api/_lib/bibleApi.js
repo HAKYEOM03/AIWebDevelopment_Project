@@ -8,8 +8,8 @@
  * 주소를 코드에 직접 적지 않고 환경변수로 뺀다.
  */
 
-// 담당자에게 받은 임시(테스트) 주소를 기본값으로 두되, 환경변수가 있으면 그 값을 우선 사용한다.
-const DEFAULT_BIBLE_API_URL = "https://rody.bible.ac.kr/api/Space";
+// 학교 전산팀이 안내한 주소를 기본값으로 두되, 환경변수가 있으면 그 값을 우선 사용한다.
+const DEFAULT_BIBLE_API_URL = "https://joshua.bible.ac.kr/api/Space";
 
 /**
  * 개발용 가짜(mock) 학교 API.
