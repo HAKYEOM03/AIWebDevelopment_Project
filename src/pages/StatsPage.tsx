@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import LockedExamCard from "../components/common/LockedExamCard";
 import LockBar from "../components/manage/LockBar";
+import SettingsStatus from "../components/manage/SettingsStatus";
 import { useExamData } from "../context/ExamDataContext";
 import { quizExams } from "../data/quizExams";
 import { questionBank } from "../data/english";
@@ -177,6 +178,8 @@ export default function StatsPage() {
             </select>
           </div>
         </div>
+
+        <SettingsStatus />
 
         <LockBar
           title={currentExam.name}

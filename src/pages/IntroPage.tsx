@@ -16,7 +16,11 @@ export default function IntroPage() {
   const [selected, setSelected] = useState<string | null>(
     () => examInfoList.find((e) => !isExamLocked(e.id))?.id ?? null
   );
-  const selectedExam = examInfoList.find((e) => e.id === selected) ?? null;
+  // 서버 설정을 늦게 받아와 고른 시험이 잠겨 있으면, 잠기지 않은 첫 시험으로 바꿔 보여준다.
+  const selectedExam =
+    examInfoList.find((e) => e.id === selected && !isExamLocked(e.id)) ??
+    examInfoList.find((e) => !isExamLocked(e.id)) ??
+    null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -34,7 +38,7 @@ export default function IntroPage() {
             <button
               key={exam.id}
               className={`px-5 py-2 rounded-full font-medium transition-all text-sm ${
-                selected === exam.id
+                selectedExam?.id === exam.id
                   ? exam.color === "blue"
                     ? "bg-blue-700 text-white"
                     : exam.color === "amber"

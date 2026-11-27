@@ -19,7 +19,8 @@ export default function QuizSelectPage() {
     requestedExamId && !isExamLocked(requestedExamId) ? requestedExamId : null;
   const [selectedExam, setSelectedExam] = useState<string | null>(preselectedExamId);
 
-  const exam = quizExams.find((e) => e.id === selectedExam);
+  // 서버 설정을 늦게 받아와 고른 시험이 잠겨 있으면 열지 않는다.
+  const exam = quizExams.find((e) => e.id === selectedExam && !isExamLocked(e.id));
 
   return (
     <div className="min-h-screen bg-gray-50">

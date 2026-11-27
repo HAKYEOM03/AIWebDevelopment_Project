@@ -1,0 +1,14 @@
+# .NET 빌드 결과
+bin/
+obj/
+
+# 개발용 SQLite DB 파일 (학생 기록이 들어갈 수 있으니 올리지 않음)
+*.db
+*.db-shm
+*.db-wal
+
+# npm run build:server 가 만드는 화면 빌드 결과
+ExamServer/wwwroot/
+
+# 배포용 출력 폴더
+publish/

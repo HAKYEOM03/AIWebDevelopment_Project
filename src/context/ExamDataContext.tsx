@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import { examInfoList, InfoSection } from "../data/examInfo";
 import { quizExams } from "../data/quizExams";
+import { fetchServerSettings, saveServerSetting, SettingKey } from "../api/settings";
 
 export interface ExamNotice {
   id: number;
@@ -36,6 +37,11 @@ interface ExamDataContextType {
   /** D-DAY 잠금 — 날짜와 카운트다운을 회색 "--"로 가린다 (시험 잠금과 별개) */
   isDdayLocked: (examId: string) => boolean;
   setDdayLocked: (examId: string, locked: boolean) => void;
+  /** 관리자 설정이 저장되는 곳 — "server"면 모든 학생에게 적용, "local"이면 이 브라우저에만 */
+  settingsSource: "server" | "local";
+  /** 서버 저장 실패 안내 (실패하면 화면 값도 저장 전으로 되돌린다) */
+  settingsError: string | null;
+  clearSettingsError: () => void;
 }
 
 export const ExamDataContext = createContext<ExamDataContextType | null>(null);
@@ -145,22 +151,89 @@ export function ExamDataProvider({ children }: { children: ReactNode }) {
     setNotices((prev) => prev.filter((n) => n.id !== id));
   };
 
+  /* ---------------- 서버 저장 (ASP.NET /api/settings가 있을 때) ---------------- */
+
+  const [settingsSource, setSettingsSource] = useState<"server" | "local">("local");
+  const [settingsError, setSettingsError] = useState<string | null>(null);
+
+  // 렌더 사이에도 항상 최신 값을 알기 위한 참조 (빠르게 연달아 바꿔도 마지막 값이 저장되게)
+  const latest = useRef({ examLocks, ddayLocks, examDates, introContent });
+  latest.current = { examLocks, ddayLocks, examDates, introContent };
+  // 서버가 마지막으로 받아들인 값 — 저장이 실패하면 이 값으로 되돌린다
+  const confirmed = useRef<Partial<typeof latest.current>>({});
+  const saveTimers = useRef<Partial<Record<SettingKey, ReturnType<typeof setTimeout>>>>({});
+  const sourceRef = useRef<"server" | "local">("local");
+
+  const setters = {
+    examLocks: setExamLocks,
+    ddayLocks: setDdayLocks,
+    examDates: setExamDates,
+    introContent: setIntroContent,
+  } as const;
+
+  // 처음 한 번 서버 설정을 읽는다. 서버가 있으면 서버 값이 기준이 된다 (이 브라우저에 남은 옛 값은 무시).
+  useEffect(() => {
+    let cancelled = false;
+    fetchServerSettings().then((server) => {
+      if (cancelled || !server) return;
+      const next = {
+        examLocks: { ...defaultLocks, ...(server.examLocks as Record<string, boolean> | undefined) },
+        ddayLocks: { ...defaultLocks, ...(server.ddayLocks as Record<string, boolean> | undefined) },
+        examDates: { ...defaultExamDates, ...(server.examDates as Record<string, string> | undefined) },
+        introContent: {
+          ...defaultIntroContent,
+          ...(server.introContent as Record<string, ExamIntroContent> | undefined),
+        },
+      };
+      confirmed.current = next;
+      sourceRef.current = "server";
+      setSettingsSource("server");
+      setExamLocks(next.examLocks);
+      setDdayLocks(next.ddayLocks);
+      setExamDates(next.examDates);
+      setIntroContent(next.introContent);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /** 값을 바로 화면에 반영하고, 서버 모드면 잠시 뒤(연속 입력을 모아서) 서버에 저장한다. */
+  function applySetting<K extends SettingKey>(key: K, value: (typeof latest.current)[K]) {
+    latest.current = { ...latest.current, [key]: value };
+    (setters[key] as (v: (typeof latest.current)[K]) => void)(value);
+    if (sourceRef.current !== "server") return;
+
+    clearTimeout(saveTimers.current[key]);
+    saveTimers.current[key] = setTimeout(async () => {
+      const toSave = latest.current[key];
+      const error = await saveServerSetting(key, toSave);
+      if (!error) {
+        confirmed.current = { ...confirmed.current, [key]: toSave };
+        return;
+      }
+      const previous = confirmed.current[key];
+      if (previous) (setters[key] as (v: (typeof latest.current)[K]) => void)(previous as (typeof latest.current)[K]);
+      setSettingsError(error);
+    }, 400);
+  }
+
   const updateExamDate = (examId: string, isoDate: string) => {
-    setExamDates((prev) => ({ ...prev, [examId]: isoDate }));
+    applySetting("examDates", { ...latest.current.examDates, [examId]: isoDate });
   };
 
   const updateIntroContent = (examId: string, content: ExamIntroContent) => {
-    setIntroContent((prev) => ({ ...prev, [examId]: content }));
+    applySetting("introContent", { ...latest.current.introContent, [examId]: content });
   };
 
   const isExamLocked = (examId: string) => !!examLocks[examId];
   const setExamLocked = (examId: string, locked: boolean) => {
-    setExamLocks((prev) => ({ ...prev, [examId]: locked }));
+    applySetting("examLocks", { ...latest.current.examLocks, [examId]: locked });
   };
 
   const isDdayLocked = (examId: string) => !!ddayLocks[examId];
   const setDdayLocked = (examId: string, locked: boolean) => {
-    setDdayLocks((prev) => ({ ...prev, [examId]: locked }));
+    applySetting("ddayLocks", { ...latest.current.ddayLocks, [examId]: locked });
   };
 
   return (
@@ -177,6 +250,9 @@ export function ExamDataProvider({ children }: { children: ReactNode }) {
         setExamLocked,
         isDdayLocked,
         setDdayLocked,
+        settingsSource,
+        settingsError,
+        clearSettingsError: () => setSettingsError(null),
       }}
     >
       {children}

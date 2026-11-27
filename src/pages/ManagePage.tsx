@@ -4,6 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import ExamDateEditor from "../components/manage/ExamDateEditor";
 import NoticeManager from "../components/manage/NoticeManager";
 import IntroContentManager from "../components/manage/IntroContentManager";
+import SettingsStatus from "../components/manage/SettingsStatus";
 
 type Section = "date" | "notice" | "intro";
 
@@ -23,10 +24,11 @@ export default function ManagePage() {
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">졸업 시험 관리</h1>
-        <p className="text-gray-500 mb-8">
+        <p className="text-gray-500 mb-3">
           아래에서 관리할 항목을 선택한 뒤 내용을 수정하고 저장하세요. 저장한
           내용은 홈 화면과 소개 페이지에 즉시 반영됩니다.
         </p>
+        <SettingsStatus />
 
         {/* 관리 항목 선택 */}
         <div className="flex gap-3 mb-6 flex-wrap">
